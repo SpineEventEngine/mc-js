@@ -26,22 +26,47 @@
 
 package io.spine.tools.mc.js.code;
 
-import com.google.common.truth.StringSubject;
-import com.google.common.truth.Truth;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import io.spine.tools.code.Indent;
 
-@DisplayName("CodeLine should")
-class CodeLineTest {
+final class GivenLines {
 
-    @Test
-    @DisplayName("provide an empty line")
-    void emptyLine() {
-        CodeLine line = CodeLine.emptyLine();
-        assertThat(line).isEqualTo("");
+    /** Prevents instantiation of this utility class. */
+    private GivenLines() {
     }
 
-    private static StringSubject assertThat(CodeLine line) {
-        return Truth.assertThat(line.content());
+    static CodeWriter withDifferentDepth(int initialDepth) {
+        CodeWriter lines = linesWithDepth(initialDepth);
+        lines.append("{");
+        lines.increaseDepth();
+        lines.append("in the code block");
+        lines.decreaseDepth();
+        lines.append("}");
+        return lines;
+    }
+
+    static CodeWriter linesWithDepth(int depth) {
+        CodeWriter lines = new CodeWriter();
+        for (int i = 0; i < depth; i++) {
+            lines.increaseDepth();
+        }
+        return lines;
+    }
+
+    /**
+     * Obtains code lines with the specified first line.
+     */
+    public static CodeWriter newCodeLines(String firstLine) {
+        CodeWriter lines = new CodeWriter();
+        lines.append(firstLine);
+        return lines;
+    }
+
+    /**
+     * Obtains code lines with the specified first line.
+     */
+    public static CodeWriter newCodeLines(String firstLine, Indent indent) {
+        CodeWriter lines = new CodeWriter(indent);
+        lines.append(firstLine);
+        return lines;
     }
 }
