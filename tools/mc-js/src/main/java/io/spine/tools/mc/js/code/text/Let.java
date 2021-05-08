@@ -24,30 +24,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.snippet;
+package io.spine.tools.mc.js.code.text;
 
-import com.google.protobuf.Any;
+import com.google.errorprone.annotations.Immutable;
+import io.spine.tools.code.Line;
 import io.spine.tools.js.code.TypeName;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 
-@DisplayName("VariableDeclaration should")
-class LetTest {
+/**
+ * A declaration of a variable using ES6 keyword {@code let}.
+ */
+@Immutable
+public final class Let extends Line {
 
-    @Test
-    @DisplayName("be initialized by value")
-    void initializedByValue() {
-        Let line = Let.withValue("someVariable", "someValue");
-        assertEquals("let someVariable = someValue;", line.text());
+    private Let(String name, String initializer) {
+        super(format("let %s = %s;", name, initializer));
     }
 
-    @Test
-    @DisplayName("be initialized by new instance")
-    void initializedByNewInstance() {
-        TypeName type = TypeName.from(Any.getDescriptor());
-        Let line = Let.newInstance("anyValue", type);
-        assertEquals("let anyValue = new proto.google.protobuf.Any();", line.text());
+    /**
+     * Creates a declaration with the specified name, initialized with the passed the value.
+     */
+    public static Let withValue(String name, String value) {
+        checkNotNull(name);
+        checkNotNull(value);
+        return new Let(name, value);
+    }
+
+    /**
+     * Creates a declaration of a variable initialized by instantiation of the type.
+     */
+    public static Let newInstance(String name, TypeName type) {
+        checkNotNull(name);
+        checkNotNull(type);
+        String initializer = "new " + type + "()";
+        return withValue(name, initializer);
     }
 }

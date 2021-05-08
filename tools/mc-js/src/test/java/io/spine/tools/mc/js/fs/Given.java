@@ -24,33 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.snippet;
+package io.spine.tools.mc.js.fs;
 
-import com.google.common.truth.StringSubject;
-import io.spine.tools.mc.js.code.CodeWriter;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import java.io.File;
 
-import static com.google.common.truth.Truth.assertThat;
+import static java.lang.String.format;
 
-@DisplayName("`MapExport` should")
-class MapExportTest {
+final class Given {
 
-    private static final String MAP_NAME = "map";
+    /** Prevents instantiation of this utility class. */
+    private Given() {
+    }
 
-    @Test
-    @DisplayName("be initialized with several entries")
-    void withSeveralEntries() {
-        MapExport map = MapExport.newBuilder(MAP_NAME)
-                .withEntry("firstKey", 1)
-                .withEntry("lastKey", 999)
-                .build();
-        CodeWriter lines = map.writer();
-        String stringRepresentation = lines.toString();
-        StringSubject assertRepresentation = assertThat(stringRepresentation);
-        assertRepresentation.contains("module.exports.map = new Map([");
-        assertRepresentation.contains("  ['firstKey', 1],");
-        assertRepresentation.contains("  ['lastKey', 999]");
-        assertRepresentation.contains("]);");
+    public static ImportStatement importWithPath(String path, File importOrigin) {
+        String importText = format("let foo = require('%s');", path);
+        JsFile file = new JsFile(importOrigin.toPath());
+        return new ImportStatement(file, importText);
+    }
+
+    public static String relativeImportPath() {
+        return "../path-relative-to-parent.js";
     }
 }
