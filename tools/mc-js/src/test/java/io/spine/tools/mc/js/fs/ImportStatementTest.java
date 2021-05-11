@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.imports;
+package io.spine.tools.mc.js.fs;
 
 import io.spine.tools.fs.FileReference;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +35,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.mc.js.code.imports.given.Given.importWithPath;
-import static io.spine.tools.mc.js.code.imports.given.Given.relativeImportPath;
+import static io.spine.tools.mc.js.fs.Given.importWithPath;
+import static io.spine.tools.mc.js.fs.Given.relativeImportPath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`ImportStatement` should")
@@ -51,7 +51,7 @@ class ImportStatementTest {
     @Test
     @DisplayName("extract the import path")
     void extractImportPath() {
-        FileReference fileReference = statement.path();
+        FileReference fileReference = statement.fileRef();
         assertThat(fileReference.value()).isEqualTo(relativeImportPath());
     }
 
@@ -59,8 +59,8 @@ class ImportStatementTest {
     @DisplayName("replace the import path")
     void replaceImportPath() {
         String newPath = "b";
-        ImportStatement updatedStatement = statement.replacePath(newPath);
-        FileReference updatedPath = updatedStatement.path();
+        ImportStatement updatedStatement = statement.replaceRef(newPath);
+        FileReference updatedPath = updatedStatement.fileRef();
         assertThat(updatedPath.value()).isEqualTo(newPath);
     }
 

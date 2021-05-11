@@ -24,14 +24,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.imports;
+package io.spine.tools.mc.js.code.task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.IterableSubject;
-import io.spine.tools.js.fs.Directory;
-import io.spine.tools.mc.js.code.given.GivenProject;
 import io.spine.tools.fs.DirectoryPattern;
 import io.spine.tools.fs.ExternalModule;
+import io.spine.tools.fs.ExternalModules;
+import io.spine.tools.js.fs.Directory;
+import io.spine.tools.mc.js.code.given.GivenProject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
+import static io.spine.tools.fs.ExternalModule.spineUsers;
+import static io.spine.tools.fs.ExternalModule.spineWeb;
 import static java.util.Arrays.asList;
 
 @DisplayName("`ResolveImports` task should")
@@ -48,7 +51,7 @@ class ResolveImportsTest {
 
     private final Directory generatedProtoDir = GivenProject.mainProtoSources();
     private final ExternalModule module = new ExternalModule(
-            "test-module", ImmutableList.of(DirectoryPattern.of("root-dir"))
+            "test-module", DirectoryPattern.listOf("root-dir")
     );
     private final Path tempDirectory = generatedProtoDir.path();
     private final Path testFile = tempDirectory.resolve("js/with-imports.js");
@@ -74,8 +77,7 @@ class ResolveImportsTest {
     @Test
     @DisplayName("not clash Spine Web and Spine Users modules")
     void notClashUsersWithWeb() throws IOException {
-        ImmutableList<ExternalModule> modules = ImmutableList.of(ExternalModule.spineWeb(),
-                                                                 ExternalModule.spineUsers());
+        ExternalModules modules = new ExternalModules(spineWeb(), spineUsers());
         ResolveImports task = new ResolveImports(generatedProtoDir, modules);
         writeFile(testFile, "require('../../spine/users/identifiers_pb.js');");
         afterResolve(testFile, task)
@@ -130,7 +132,7 @@ class ResolveImportsTest {
     @Test
     @DisplayName("resolve relative imports of standard Protobuf types in Spine Web")
     void resolveRelativeImportsOfStandardProtos() throws IOException {
-        ResolveImports task = newTask(ExternalModule.spineWeb());
+        ResolveImports task = newTask(spineWeb());
         Path file = tempDirectory.resolve("imports.js");
         writeFile(file, "require('google-protobuf/google/protobuf/timestamp_pb.js');");
         afterResolve(file, task)
@@ -155,6 +157,6 @@ class ResolveImportsTest {
     }
 
     private ResolveImports newTask(ExternalModule module) {
-        return new ResolveImports(generatedProtoDir, ImmutableList.of(module));
+        return new ResolveImports(generatedProtoDir, new ExternalModules(module));
     }
 }

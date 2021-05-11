@@ -24,26 +24,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.imports.given;
+package io.spine.tools.mc.js.code.text;
 
-import io.spine.tools.mc.js.code.imports.ImportStatement;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static java.lang.String.format;
+@DisplayName("Return")
+class ReturnTest {
 
-public class Given {
-
-    /** Prevents instantiation of this utility class. */
-    private Given() {
+    @Test
+    @DisplayName("an object")
+    void object() {
+        Return line = Return.value(5);
+        assertEquals("return 5;", line.text());
     }
 
-    public static ImportStatement importWithPath(String path, File importOrigin) {
-        String importText = format("let foo = require('%s');", path);
-        return new ImportStatement(importText, importOrigin);
+    @Test
+    @DisplayName("a string literal")
+    void stringLiteral() {
+        Return line = Return.stringLiteral("foo");
+        assertEquals("return 'foo';", line.text());
     }
 
-    public static String relativeImportPath() {
-        return "../path-relative-to-parent.js";
+    @Test
+    @DisplayName("null reference")
+    void nullValue() {
+        Return nullValue = Return.nullReference();
+        assertEquals("return null;", nullValue.text());
     }
 }

@@ -24,25 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.imports;
+package io.spine.tools.mc.js.code.text;
 
-import com.google.common.base.Predicate;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import io.spine.tools.fs.FileReference;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import io.spine.tools.code.Element;
+import io.spine.tools.mc.js.code.CodeWriter;
 
 /**
- * A predicate to match an import of a file that cannot be found on a file system.
+ * A snippet of the code.
  */
-final class IsUnresolvedRelativeImport implements Predicate<ImportStatement> {
+public interface Snippet extends Element {
 
-    @CanIgnoreReturnValue
+    /**
+     * Obtains code lines representing this snippet.
+     *
+     * @return always returns a new {@link CodeWriter}
+     */
+    CodeWriter writer();
+
+    /**
+     * Obtains the text resulting from the current state of the {@link #writer()}.
+     */
     @Override
-    public boolean apply(@Nullable ImportStatement statement) {
-        checkNotNull(statement);
-        FileReference fileReference = statement.path();
-        return fileReference.isRelative() && !statement.importedFileExists();
+    default String text() {
+        return writer().toString();
     }
 }

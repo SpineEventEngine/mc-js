@@ -24,29 +24,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.snippet;
+package io.spine.tools.mc.js.fs;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import java.io.File;
 
-import static io.spine.tools.mc.js.code.snippet.Comment.MC_JS_SIGNATURE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.lang.String.format;
 
-@DisplayName("Comment should")
-class CommentTest {
+final class Given {
 
-    @Test
-    @DisplayName("be prepended with slashes")
-    void predendedWithSlashes() {
-        String text = "It is a comment text.";
-        Comment comment = Comment.of(text);
-        assertEquals("// " + text, comment.content());
+    /** Prevents instantiation of this utility class. */
+    private Given() {
     }
 
-    @Test
-    @DisplayName("provide the comment about generation")
-    void generatedByComment() {
-        Comment generatedBy = Comment.generatedBySpine();
-        assertEquals("// " + MC_JS_SIGNATURE, generatedBy.content());
+    public static ImportStatement importWithPath(String path, File importOrigin) {
+        String importText = format("let foo = require('%s');", path);
+        JsFile file = new JsFile(importOrigin.toPath());
+        return new ImportStatement(file, importText);
+    }
+
+    public static String relativeImportPath() {
+        return "../path-relative-to-parent.js";
     }
 }

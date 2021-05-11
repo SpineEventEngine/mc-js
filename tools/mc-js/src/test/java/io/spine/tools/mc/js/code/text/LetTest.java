@@ -24,30 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.imports;
+package io.spine.tools.mc.js.code.text;
 
-import com.google.common.base.Predicate;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import io.spine.tools.fs.FileReference;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import com.google.protobuf.Any;
+import io.spine.tools.js.code.TypeName;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * A predicate to match an import of a standard Protobuf type
- * ({@code google-protobuf/google/protobuf/..}).
- */
-final class IsGoogleProtobufImport implements Predicate<ImportStatement> {
+@DisplayName("VariableDeclaration should")
+class LetTest {
 
-    private static final String STANDARD_PREFIX =
-            ResolveImports.GOOGLE_PROTOBUF_MODULE + "/google/protobuf/";
+    @Test
+    @DisplayName("be initialized by value")
+    void initializedByValue() {
+        Let line = Let.withValue("someVariable", "someValue");
+        assertEquals("let someVariable = someValue;", line.text());
+    }
 
-    @CanIgnoreReturnValue
-    @Override
-    public boolean apply(@Nullable ImportStatement statement) {
-        checkNotNull(statement);
-        FileReference fileReference = statement.path();
-        return fileReference.value()
-                            .startsWith(STANDARD_PREFIX);
+    @Test
+    @DisplayName("be initialized by new instance")
+    void initializedByNewInstance() {
+        TypeName type = TypeName.from(Any.getDescriptor());
+        Let line = Let.newInstance("anyValue", type);
+        assertEquals("let anyValue = new proto.google.protobuf.Any();", line.text());
     }
 }
