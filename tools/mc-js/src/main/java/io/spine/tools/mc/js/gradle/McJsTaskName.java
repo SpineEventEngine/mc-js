@@ -26,41 +26,18 @@
 
 package io.spine.tools.mc.js.gradle;
 
-import com.google.protobuf.gradle.ExecutableLocator;
-import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.gradle.ProtocConfigurationPlugin;
-import org.gradle.api.NamedDomainObjectContainer;
-import org.gradle.api.Project;
-
-import java.io.File;
-import java.nio.file.Path;
+import io.spine.annotation.Internal;
+import io.spine.tools.gradle.TaskName;
 
 /**
- * A Gradle plugin that performs additional {@code protoc} configurations relevant for
- * JavaScript projects.
+ * Names of Gradle tasks defined by the Spine Protobuf JS plugin.
  */
-final class ProtocConfig extends ProtocConfigurationPlugin {
+@Internal
+public enum McJsTaskName implements TaskName {
 
-    @Override
-    protected File getTestDescriptorSet(Project project) {
-        return McJsExtension.getTestDescriptorSet(project);
-    }
-
-    @Override
-    protected Path generatedFilesBaseDir(Project project) {
-        DefaultJsPaths jsProject = DefaultJsPaths.at(project.getProjectDir());
-        DefaultJsPaths.GeneratedProtoRoot generatedProtoRoot = jsProject.proto();
-        return generatedProtoRoot.path();
-    }
-
-    @Override
-    protected File getMainDescriptorSet(Project project) {
-        return McJsExtension.getMainDescriptorSet(project);
-    }
-
-    @Override
-    protected void configureProtocPlugins(NamedDomainObjectContainer<ExecutableLocator> plugins,
-                                          Project project) {
-        // Do nothing.
-    }
+    /**
+     * Generates JSON-parsing code for the JavaScript messages compiled from Protobuf in both
+     * {@code main} and {@code test} scopes.
+     */
+    generateJsonParsers
 }
