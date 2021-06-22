@@ -24,51 +24,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.task;
+package io.spine.tools.mc.js.code.given;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.code.proto.FileSet;
-import io.spine.logging.Logging;
-import io.spine.tools.fs.ExternalModules;
 import io.spine.tools.js.fs.Directory;
-import io.spine.tools.js.fs.FileName;
-import io.spine.tools.mc.js.fs.JsFile;
+import io.spine.code.proto.FileSet;
+import io.spine.tools.mc.js.code.step.CodeGenStep;
 
-import java.nio.file.Path;
+import javax.annotation.Nullable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A task to resolve imports in generated files.
- *
- * <p>Supports only {@code CommonJS} imports.
- *
- * <p>The task should be performed last among {@linkplain GenerationTask generation tasks}
- * to ensure that imports won't be modified after execution of this task.
+ * A test implementation of {@link CodeGenStep}.
  */
-public final class ResolveImports extends GenerationTask implements Logging {
+public class TestCodeGenStep extends CodeGenStep {
 
-    private final ExternalModules modules;
+    private boolean sourcesProcessed = false;
+    private boolean filesFiltered = false;
+    @Nullable
+    private FileSet processedFileSet;
 
-    public ResolveImports(Directory generatedRoot, ExternalModules modules) {
+    public TestCodeGenStep(Directory generatedRoot) {
         super(generatedRoot);
-        this.modules = checkNotNull(modules);
     }
 
     @Override
     protected void generateFor(FileSet fileSet) {
-        for (FileDescriptor file : fileSet.files()) {
-            FileName fileName = FileName.from(file);
-            _debug().log("Resolving imports in the file `%s`.", fileName);
-            Path filePath = generatedRoot().resolve(fileName);
-            resolveInFile(filePath);
-        }
+        sourcesProcessed = true;
+        processedFileSet = fileSet;
     }
 
-    @VisibleForTesting
-    void resolveInFile(Path filePath) {
-        JsFile file = new JsFile(filePath);
-        file.resolveImports(generatedRoot().path(), modules);
+    @Override
+    protected FileSet filter(FileSet fileSet) {
+        filesFiltered = true;
+        return super.filter(fileSet);
+    }
+
+    public boolean areSourcesProcessed() {
+        return sourcesProcessed;
+    }
+
+    public boolean areFilesFiltered() {
+        return filesFiltered;
+    }
+
+    public FileSet processedFileSet() {
+        return checkNotNull(processedFileSet);
     }
 }

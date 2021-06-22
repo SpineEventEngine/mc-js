@@ -24,9 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.task;
+package io.spine.tools.mc.js.code.step;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.truth.IterableSubject;
 import io.spine.tools.fs.DirectoryPattern;
 import io.spine.tools.fs.ExternalModule;

@@ -52,7 +52,12 @@ import static io.spine.tools.mc.js.gradle.McJsPlugin.extensionName;
  * task to configure when it will be executed during the build lifecycle.
  */
 @SuppressWarnings("PublicField" /* Expose fields as a Gradle extension */)
-public class Extension extends GradleExtension {
+public class McJsExtension extends GradleExtension {
+
+    /**
+     * The name of the extension as it appears in a Gradle script.
+     */
+    static final String NAME = "protoJs";
 
     /**
      * The absolute path to the main Protobuf descriptor set file.
@@ -103,10 +108,21 @@ public class Extension extends GradleExtension {
      * }</pre>
      */
     public Map<String, List<String>> modules = newHashMap();
+
     private Task generateParsersTask;
 
+    /**
+     * Creates the extension in the given project.
+     */
+    static McJsExtension createIn(Project project) {
+        McJsExtension extension =
+                project.getExtensions()
+                        .create(NAME, McJsExtension.class);
+        return extension;
+    }
+
     public static Directory getMainGenProto(Project project) {
-        Extension extension = extension(project);
+        McJsExtension extension = extension(project);
         String specifiedValue = extension.mainGenProtoDir;
         Path path = pathOrDefault(specifiedValue,
                                   def(project).proto()
@@ -115,7 +131,7 @@ public class Extension extends GradleExtension {
     }
 
     public static Directory getTestGenProtoDir(Project project) {
-        Extension extension = extension(project);
+        McJsExtension extension = extension(project);
         String specifiedValue = extension.testGenProtoDir;
         Path path = pathOrDefault(specifiedValue,
                                   def(project).proto()
@@ -124,14 +140,14 @@ public class Extension extends GradleExtension {
     }
 
     public static File getMainDescriptorSet(Project project) {
-        Extension extension = extension(project);
+        McJsExtension extension = extension(project);
         Path path = pathOrDefault(extension.mainDescriptorSetPath,
                                   extension.defaultMainDescriptor(project));
         return path.toFile();
     }
 
     public static File getTestDescriptorSet(Project project) {
-        Extension extension = extension(project);
+        McJsExtension extension = extension(project);
         Path path = pathOrDefault(extension.testDescriptorSetPath,
                                   extension.defaultTestDescriptor(project));
         return path.toFile();
@@ -161,8 +177,8 @@ public class Extension extends GradleExtension {
         this.generateParsersTask = generateParsersTask;
     }
 
-    static Extension extension(Project project) {
-        return (Extension)
+    static McJsExtension extension(Project project) {
+        return (McJsExtension)
                 project.getExtensions()
                        .getByName(extensionName());
     }

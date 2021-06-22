@@ -24,51 +24,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.given;
+package io.spine.tools.mc.js.code.step;
 
-import io.spine.tools.js.fs.Directory;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.FileSet;
-import io.spine.tools.mc.js.code.task.GenerationTask;
+import io.spine.logging.Logging;
+import io.spine.tools.fs.ExternalModules;
+import io.spine.tools.js.fs.Directory;
+import io.spine.tools.js.fs.FileName;
+import io.spine.tools.mc.js.fs.JsFile;
 
-import javax.annotation.Nullable;
+import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * A test implementation of {@link GenerationTask}.
+ * A task to resolve imports in generated files.
+ *
+ * <p>Supports only {@code CommonJS} imports.
+ *
+ * <p>This step should be performed last among {@linkplain CodeGenStep code generation steps}
+ * to ensure that imports won't be modified later.
  */
-public class TestGenerationTask extends GenerationTask {
+public final class ResolveImports extends CodeGenStep implements Logging {
 
-    private boolean sourcesProcessed = false;
-    private boolean filesFiltered = false;
-    @Nullable
-    private FileSet processedFileSet;
+    private final ExternalModules modules;
 
-    public TestGenerationTask(Directory generatedRoot) {
+    public ResolveImports(Directory generatedRoot, ExternalModules modules) {
         super(generatedRoot);
+        this.modules = checkNotNull(modules);
     }
 
     @Override
     protected void generateFor(FileSet fileSet) {
-        sourcesProcessed = true;
-        processedFileSet = fileSet;
+        for (FileDescriptor file : fileSet.files()) {
+            FileName fileName = FileName.from(file);
+            _debug().log("Resolving imports in the file `%s`.", fileName);
+            Path filePath = generatedRoot().resolve(fileName);
+            resolveInFile(filePath);
+        }
     }
 
-    @Override
-    protected FileSet filter(FileSet fileSet) {
-        filesFiltered = true;
-        return super.filter(fileSet);
-    }
-
-    public boolean areSourcesProcessed() {
-        return sourcesProcessed;
-    }
-
-    public boolean areFilesFiltered() {
-        return filesFiltered;
-    }
-
-    public FileSet processedFileSet() {
-        return checkNotNull(processedFileSet);
+    @VisibleForTesting
+    void resolveInFile(Path filePath) {
+        JsFile file = new JsFile(filePath);
+        file.resolveImports(generatedRoot().path(), modules);
     }
 }

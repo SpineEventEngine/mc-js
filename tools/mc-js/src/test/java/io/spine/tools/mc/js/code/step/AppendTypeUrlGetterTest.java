@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.task;
+package io.spine.tools.mc.js.code.step;
 
 import com.google.common.truth.StringSubject;
 import com.google.protobuf.Descriptors.Descriptor;
@@ -50,8 +50,8 @@ import org.junit.jupiter.api.Test;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.mc.js.code.given.Given.enumType;
 import static io.spine.tools.mc.js.code.given.Given.messageType;
-import static io.spine.tools.mc.js.code.task.AppendTypeUrlGetter.typeUrlMethod;
-import static io.spine.tools.mc.js.code.task.AppendTypeUrlGetter.typeUrlMethods;
+import static io.spine.tools.mc.js.code.step.AppendTypeUrlGetter.typeUrlMethod;
+import static io.spine.tools.mc.js.code.step.AppendTypeUrlGetter.typeUrlMethods;
 import static java.lang.String.format;
 
 @DisplayName("AppendTypeUrlGetter should")
