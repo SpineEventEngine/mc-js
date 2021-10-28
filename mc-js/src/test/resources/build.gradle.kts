@@ -80,8 +80,14 @@ tasks.build {
 }
 
 val spineBaseVersion: String by extra
+val protobufVersion: String = io.spine.internal.dependency.Protobuf.version
 
 dependencies {
-    protobuf(files("$enclosingRootDir/base/src/main/proto"))
-    implementation("io.spine:spine-base:$spineBaseVersion")
+    // Proto files coming from `base` are to be generated into JS.
+    protobuf("io.spine:spine-base:$spineBaseVersion:proto@jar")
+    
+    // We want standard Google files to be used for imports.
+    implementation("com.google.protobuf:protobuf-java:${protobufVersion}:sources@jar")
+
+    // See https://github.com/google/protobuf-gradle-plugin#protos-in-dependencies for details.
 }
