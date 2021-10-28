@@ -64,7 +64,7 @@ public final class CreateParsers extends CodeGenStep {
     /**
      * Obtains message types that require parsers to be generated.
      *
-     * <p>The types with the <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">
+     * <p>The types with <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">
      * special JSON mapping</a> should be skipped.
      * Parsers for the types are provided by the Spine Web.
      */
