@@ -24,27 +24,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
+package io.spine.internal.dependency
 
-group = "io.spine.tools"
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.extra
 
-val spineBaseVersion: String by extra
-val toolBaseVersion: String by extra
-val mcVersion: String by extra
+/**
+ * Dependencies on Spine `base` modules.
+ *
+ * @constructor
+ * Creates a new instance of `Spine` taking the `spineBaseVersion` from the given project's
+ * extra properties.
+ */
+class Spine(p: Project) {
 
-dependencies {
-    api(gradleApi())
+    val base = "io.spine:spine-base:${p.spineVersion}"
+    val testlib = "io.spine.tools:spine-testlib:${p.spineVersion}"
 
-    api("io.spine.tools:spine-model-compiler:${mcVersion}")
+    val toolBase = "io.spine.tools:spine-tool-base:${p.mcVersion}"
+    val pluginBase = "io.spine.tools:spine-plugin-base:${p.mcVersion}"
+    val pluginTestlib = "io.spine.tools:spine-plugin-testlib:${p.mcVersion}"
+    val modelCompiler = "io.spine.tools:spine-model-compiler:${p.mcVersion}"
 
-    testImplementation(gradleTestKit())
-    testImplementation("io.spine.tools:spine-testlib:${spineBaseVersion}")
-    testImplementation("io.spine.tools:spine-plugin-testlib:${toolBaseVersion}")
+    private val Project.spineVersion: String
+        get() = extra["spineBaseVersion"] as String
+    private val Project.mcVersion: String
+        get() = extra["mcVersion"] as String
 }
-
-//TODO:2021-07-22:alexander.yevsyukov: Turn to WARN and investigate duplicates.
-// see https://github.com/SpineEventEngine/base/issues/657
-val dupStrategy = DuplicatesStrategy.INCLUDE
-tasks.processResources.get().duplicatesStrategy = dupStrategy
-tasks.processTestResources.get().duplicatesStrategy = dupStrategy
-tasks.sourceJar.get().duplicatesStrategy = dupStrategy

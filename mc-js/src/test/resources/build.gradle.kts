@@ -79,9 +79,9 @@ tasks.build {
     dependsOn(compileProtoToJs)
 }
 
-val spineVersion: String by extra
+val spineBaseVersion: String by extra
 
 dependencies {
     protobuf(files("$enclosingRootDir/base/src/main/proto"))
-    implementation("io.spine:spine-base:$spineVersion")
+    implementation("io.spine:spine-base:$spineBaseVersion")
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, TeamDev. All rights reserved.
+ * Copyright 2020, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import io.spine.internal.dependency.Spine
+rootProject.name = "mc-js"
 
-group = "io.spine.tools"
-
-val spineBaseVersion: String by extra
-val toolBaseVersion: String by extra
-val mcVersion: String by extra
-
-dependencies {
-    api(gradleApi())
-
-    api("io.spine.tools:spine-model-compiler:${mcVersion}")
-
-    testImplementation(gradleTestKit())
-    testImplementation("io.spine.tools:spine-testlib:${spineBaseVersion}")
-    testImplementation("io.spine.tools:spine-plugin-testlib:${toolBaseVersion}")
-}
-
-//TODO:2021-07-22:alexander.yevsyukov: Turn to WARN and investigate duplicates.
-// see https://github.com/SpineEventEngine/base/issues/657
-val dupStrategy = DuplicatesStrategy.INCLUDE
-tasks.processResources.get().duplicatesStrategy = dupStrategy
-tasks.processTestResources.get().duplicatesStrategy = dupStrategy
-tasks.sourceJar.get().duplicatesStrategy = dupStrategy
+include(
+    "mc-js",
+)
