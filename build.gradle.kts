@@ -172,7 +172,8 @@ subprojects {
         }
     }
 
-    val generatedResources = "$projectDir/generated/main/resources"
+    val generatedDir by extra("$projectDir/generated")
+    val generatedResources = "$generatedDir/main/resources"
 
     tasks.create<DefaultTask>(name = "prepareProtocConfigVersions") {
         description = "Prepares the versions.properties file."
@@ -220,6 +221,7 @@ subprojects {
     }
 
     protobuf {
+        generatedFilesBaseDir = generatedDir
         protoc { artifact = Protobuf.compiler }
     }
 }
