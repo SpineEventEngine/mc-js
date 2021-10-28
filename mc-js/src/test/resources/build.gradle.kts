@@ -26,6 +26,8 @@
 
 import com.google.protobuf.gradle.*
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.gradle.applyGitHubPackages
+import io.spine.internal.gradle.applyStandard
 
 plugins {
     java
