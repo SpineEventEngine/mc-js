@@ -26,6 +26,8 @@
 
 import com.google.protobuf.gradle.*
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.gradle.applyGitHubPackages
+import io.spine.internal.gradle.applyStandard
 
 plugins {
     java
@@ -42,8 +44,10 @@ val enclosingRootDir: String by extra
 apply(from = "$enclosingRootDir/version.gradle.kts")
 
 repositories {
-    mavenLocal()
-    mavenCentral()
+    applyGitHubPackages("base", project)
+    applyGitHubPackages("tool-base", project)
+    applyGitHubPackages("model-compiler", project)
+    applyStandard()
 }
 
 tasks.compileJava { enabled = false }
