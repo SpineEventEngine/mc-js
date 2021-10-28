@@ -42,8 +42,10 @@ val enclosingRootDir: String by extra
 apply(from = "$enclosingRootDir/version.gradle.kts")
 
 repositories {
-    mavenLocal()
-    mavenCentral()
+    applyGitHubPackages("base", project)
+    applyGitHubPackages("tool-base", project)
+    applyGitHubPackages("model-compiler", project)
+    applyStandard()
 }
 
 tasks.compileJava { enabled = false }
