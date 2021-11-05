@@ -12,4 +12,3 @@ See the common parts of Model Compiler at [SpineEventEngine/model-compiler][mode
 [model-compiler]: https://github.com/SpineEventEngine/model-compiler
 [mc-java]: https://github.com/SpineEventEngine/mc-java
 [mc-dart]: https://github.com/SpineEventEngine/mc-dart
-
