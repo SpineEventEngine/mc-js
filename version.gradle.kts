@@ -27,8 +27,8 @@
 /**
  * This version is also used in the tests. See `mc-js/src/test/resources/build.gradle.kts`.
  */
-val spineBaseVersion by extra("2.0.0-SNAPSHOT.74")
-val toolBaseVersion by extra("2.0.0-SNAPSHOT.74")
-val mcVersion by extra("2.0.0-SNAPSHOT.74")
+val spineBaseVersion by extra("2.0.0-SNAPSHOT.77")
+val toolBaseVersion by extra("2.0.0-SNAPSHOT.82")
+val mcVersion by extra("2.0.0-SNAPSHOT.85")
 
-val versionToPublish by extra("2.0.0-SNAPSHOT.74")
+val versionToPublish by extra("2.0.0-SNAPSHOT.82")
