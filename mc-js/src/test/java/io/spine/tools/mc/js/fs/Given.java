@@ -36,13 +36,13 @@ final class Given {
     private Given() {
     }
 
-    public static ImportStatement importWithPath(String path, File importOrigin) {
+    static ImportStatement importWithPath(String path, File importOrigin) {
         String importText = format("let foo = require('%s');", path);
         JsFile file = new JsFile(importOrigin.toPath());
         return new ImportStatement(file, importText);
     }
 
-    public static String relativeImportPath() {
+    static String relativeImportPath() {
         return "../path-relative-to-parent.js";
     }
 }
