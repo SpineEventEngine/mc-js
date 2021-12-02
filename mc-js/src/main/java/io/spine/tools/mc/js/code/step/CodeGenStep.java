@@ -61,7 +61,7 @@ public abstract class CodeGenStep {
     }
 
     /**
-     * Filters out files that should not processed by the task.
+     * Filters out files that should not be processed by the task.
      *
      * <p>The method filters out files that don't belong to the module.
      * A file is considered belonging to the module if it was compiled to JavaScript.

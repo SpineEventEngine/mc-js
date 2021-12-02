@@ -59,7 +59,7 @@ class ResolveImportsTest {
     @BeforeAll
     static void compileProject() {
         GivenProject project = GivenProject.serving(ResolveImportsTest.class);
-        generatedProtoDir = project.mainProtoSources();
+        generatedProtoDir = project.generatedMainJsSources();
         tempDirectory = generatedProtoDir.path();
         testFile = tempDirectory.resolve("js/with-imports.js");
     }

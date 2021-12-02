@@ -28,24 +28,16 @@ package io.spine.tools.mc.js.gradle;
 
 import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.plugins.ExtensionContainer;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.collect.Maps.newHashMap;
 import static io.spine.tools.fs.ExternalModule.predefinedModules;
-import static io.spine.tools.gradle.Projects.getDefaultMainDescriptors;
-import static io.spine.tools.gradle.Projects.getDefaultTestDescriptors;
-import static io.spine.tools.mc.js.gradle.McJsPlugin.extensionName;
 
 /**
  * An extension for the {@link McJsPlugin} which allows to obtain the {@code generateJsonParsers}
@@ -55,29 +47,9 @@ import static io.spine.tools.mc.js.gradle.McJsPlugin.extensionName;
 public class McJsExtension {
 
     /**
-     * The name of the extension as it appears in a Gradle script.
+     * The name of the extension as it appears in a Gradle script under {@code modelCompiler}.
      */
-    static final String NAME = "protoJs";
-
-    /**
-     * The absolute path to the main Protobuf descriptor set file.
-     */
-    public String mainDescriptorSetFile;
-
-    /**
-     * The absolute path to the test Protobuf descriptor set file.
-     */
-    public String testDescriptorSetFile;
-
-    /**
-     * The absolute path to the main generated JavaScript code.
-     */
-    public String generatedMainDir;
-
-    /**
-     * The absolute path to the generated test JavaScript code.
-     */
-    public String generatedTestDir;
+    static final String NAME = "js";
 
     /**
      * Names of JavaScript modules and directories they provide.
@@ -110,7 +82,7 @@ public class McJsExtension {
     @SuppressWarnings(
             "UnrecognisedJavadocTag" /* ... `{@code }` within the code block example above. */
     )
-    public Map<String, List<String>> modules = newHashMap();
+    public Map<String, List<String>> modules = new HashMap<>();
 
     private Task generateParsersTask;
 
@@ -118,43 +90,9 @@ public class McJsExtension {
      * Creates the extension in the given project.
      */
     static McJsExtension createIn(Project project) {
-        McJsExtension extension =
-                project.getExtensions()
-                        .create(NAME, McJsExtension.class);
+        ExtensionContainer extensions = project.getExtensions();
+        McJsExtension extension = (McJsExtension) extensions.create(NAME, McJsExtension.class);
         return extension;
-    }
-
-    public static Directory getMainGenProto(Project project) {
-        McJsExtension extension = extension(project);
-        String specifiedValue = extension.generatedMainDir;
-        Path path = pathOrDefault(specifiedValue,
-                                  def(project).generated()
-                                              .mainJs());
-        return Directory.at(path);
-    }
-
-    public static Directory getTestGenProtoDir(Project project) {
-        McJsExtension extension = extension(project);
-        String specifiedValue = extension.generatedTestDir;
-        Path path = pathOrDefault(specifiedValue,
-                                  def(project).generated()
-                                              .testJs());
-        return Directory.at(path);
-    }
-
-    public static File getMainDescriptorSet(Project project) {
-        McJsExtension extension = extension(project);
-        File result = getDefaultMainDescriptors(project);
-        Path path = pathOrDefault(extension.mainDescriptorSetFile,
-                                  result);
-        return path.toFile();
-    }
-
-    public static File getTestDescriptorSet(Project project) {
-        McJsExtension extension = extension(project);
-        File result = getDefaultTestDescriptors(project);
-        Path path = pathOrDefault(extension.testDescriptorSetFile, result);
-        return path.toFile();
     }
 
     ExternalModules modules() {
@@ -184,17 +122,6 @@ public class McJsExtension {
     static McJsExtension extension(Project project) {
         return (McJsExtension)
                 project.getExtensions()
-                       .getByName(extensionName());
-    }
-
-    private static Path pathOrDefault(String path, Object defaultValue) {
-        String pathValue = isNullOrEmpty(path)
-                           ? defaultValue.toString()
-                           : path;
-        return Paths.get(pathValue);
-    }
-
-    private static DefaultJsPaths def(Project project) {
-        return DefaultJsPaths.at(project.getProjectDir());
+                       .getByName(NAME);
     }
 }

@@ -74,7 +74,7 @@ class CreateParsersTest {
     static void compileProject() {
         GivenProject project = GivenProject.serving(CreateParsersTest.class);
         fileSet = project.mainFileSet();
-        generatedProtoDir = project.mainProtoSources();
+        generatedProtoDir = project.generatedMainJsSources();
         writer = new CreateParsers(generatedProtoDir);
     }
 

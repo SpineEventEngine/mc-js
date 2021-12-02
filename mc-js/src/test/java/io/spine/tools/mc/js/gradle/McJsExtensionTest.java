@@ -28,6 +28,7 @@ package io.spine.tools.mc.js.gradle;
 
 import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
+import io.spine.tools.gradle.SourceSetName;
 import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.js.fs.Directory;
 import org.gradle.api.Project;
@@ -46,6 +47,7 @@ import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.code.proto.FileDescriptors.DESC_EXTENSION;
+import static io.spine.tools.gradle.project.Projects.descriptorSetFile;
 import static io.spine.tools.mc.js.gradle.McJsExtension.extension;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,97 +75,6 @@ class McJsExtensionTest {
 
         project.setGroup(GROUP_ID);
         project.setVersion(VERSION);
-    }
-
-    @Test
-    @DisplayName("return the default directory with main generated Protobufs")
-    void defaultMainGenProto() {
-        Directory directory = McJsExtension.getMainGenProto(project);
-        Directory expected = defaultPaths.generated()
-                                         .mainJs();
-        assertThat(directory)
-                .isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("return the set directory with main generated Protobufs")
-    void customMainGenProto() {
-        String customPath = "proto/main";
-        pluginExtension().generatedMainDir = customPath;
-        Directory directory = McJsExtension.getMainGenProto(project);
-        Directory expected = Directory.at(Paths.get(customPath));
-        assertEquals(expected, directory);
-    }
-
-    @Test
-    @DisplayName("return the default directory with test generated Protobufs")
-    void defaultTestGenProto() {
-        Directory directory = McJsExtension.getTestGenProtoDir(project);
-        Directory expected = defaultPaths.generated()
-                                         .testJs();
-        assertThat(directory)
-                .isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("return the set directory with test generated Protobufs")
-    void customTestGenProto() {
-        String customPath = "proto/test";
-        pluginExtension().generatedTestDir = customPath;
-        Directory directory = McJsExtension.getTestGenProtoDir(project);
-        Directory expected = Directory.at(Paths.get(customPath));
-        assertThat(directory)
-                .isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("return the main descriptor set at the default path")
-    void defaultMainDescriptorSet() {
-        File file = McJsExtension.getMainDescriptorSet(project);
-        Path mainDescriptors = defaultPaths.buildRoot()
-                                           .descriptors()
-                                           .mainDescriptors();
-        File expected = mainDescriptors
-                .resolve(GROUP_ID + '_' + project.getName() + '_' + VERSION + DESC_EXTENSION)
-                .toFile();
-        assertThat(file)
-                .isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("return the main descriptor set at the custom path")
-    void customMainDescriptorSet() {
-        String customPath = "main/types.desc";
-        pluginExtension().mainDescriptorSetFile = customPath;
-        File file = McJsExtension.getMainDescriptorSet(project);
-        File expected = new File(customPath);
-        assertThat(file)
-                .isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("return the test descriptor set at the default path")
-    void defaultTestDescriptorSet() {
-        File file = McJsExtension.getTestDescriptorSet(project);
-        Path testDescriptors = defaultPaths.buildRoot()
-                                           .descriptors()
-                                           .testDescriptors();
-        File expected = testDescriptors
-                .resolve(GROUP_ID + '_' + project.getName() + '_' + VERSION + "_test.desc")
-                .toFile();
-        assertThat(file)
-                .isEqualTo(expected);
-    }
-
-    @Test
-    @DisplayName("return the test descriptor set at the custom path")
-    void customTestDescriptorSet() {
-        String customPath = "test/types.desc";
-        pluginExtension().testDescriptorSetFile = customPath;
-        File file = McJsExtension.getTestDescriptorSet(project);
-        File expected = new File(customPath);
-        assertThat(file)
-                .isEqualTo(expected);
     }
 
     @Test

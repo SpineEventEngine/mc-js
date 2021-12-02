@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static io.spine.tools.gradle.BaseTaskName.build;
+import static io.spine.tools.gradle.task.BaseTaskName.build;
 import static io.spine.tools.mc.js.gradle.McJsTaskName.generateJsonParsers;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
