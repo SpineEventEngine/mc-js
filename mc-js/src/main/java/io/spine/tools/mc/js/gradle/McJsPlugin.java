@@ -26,31 +26,16 @@
 
 package io.spine.tools.mc.js.gradle;
 
-import com.google.common.collect.ImmutableList;
-import io.spine.code.proto.FileSet;
-import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.gradle.ProtoFiles;
-import io.spine.tools.gradle.SourceSetName;
 import io.spine.tools.gradle.task.GradleTask;
-import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 import io.spine.tools.mc.gradle.LanguagePlugin;
 import io.spine.tools.mc.js.code.index.CreateParsers;
 import io.spine.tools.mc.js.code.index.GenerateIndexFile;
 import io.spine.tools.mc.js.code.step.AppendTypeUrlGetter;
-import io.spine.tools.mc.js.code.step.CodeGenStep;
-import io.spine.tools.mc.js.code.step.ResolveImports;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Supplier;
-
-import static io.spine.tools.gradle.project.Projects.getSourceSetNames;
 import static io.spine.tools.gradle.task.BaseTaskName.build;
-import static io.spine.tools.mc.js.gradle.McJsOptions.in;
 import static io.spine.tools.mc.js.gradle.McJsTaskName.generateJsonParsers;
 import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
 
@@ -102,68 +87,11 @@ public class McJsPlugin extends LanguagePlugin {
     }
 
     private static Task createTaskIn(Project project) {
-        Action<Task> action = newAction(project);
+        Action<Task> action = GenerateJsonParsers.newAction(project);
         GradleTask newTask = GradleTask.newBuilder(generateJsonParsers, action)
                 .insertBeforeTask(build)
                 .applyNowTo(project);
         Task task = newTask.getTask();
         return task;
-    }
-
-    /**
-     * Creates an {@code Action} to perform the additional generation of code
-     * for working with Protobuf types.
-     *
-     * <p>The action handles both main and test scopes.
-     *
-     * <p>The paths to the generated JS messages location, as well as to the descriptor set file,
-     * are currently hard-coded.
-     *
-     * <p>See {@link DefaultJsPaths} for the expected configuration.
-     */
-    private static Action<Task> newAction(Project project) {
-        return task -> generateJsonParsers(project);
-    }
-
-    private static void generateJsonParsers(Project project) {
-        List<SourceSetName> sourceSetNames = getSourceSetNames(project);
-        for (SourceSetName ssn : sourceSetNames) {
-            generateFor(project, ssn);
-        }
-    }
-
-    private static void generateFor(Project project, SourceSetName ssn) {
-        ExternalModules modules = in(project).combinedModules();
-        generateCode(project, ssn, modules);
-    }
-
-    private static void generateCode(Project project, SourceSetName ssn, ExternalModules modules) {
-        Supplier<FileSet> files = ProtoFiles.collect(project, ssn);
-        Directory generatedRoot = generatedRootFor(project, ssn);
-        ImmutableList<CodeGenStep> steps = createSteps(generatedRoot, modules);
-        FileSet suppliedFiles = files.get();
-        for (CodeGenStep step : steps) {
-            step.performFor(suppliedFiles);
-        }
-    }
-
-    private static ImmutableList<CodeGenStep>
-    createSteps(Directory generatedRoot, ExternalModules modules) {
-        ImmutableList<CodeGenStep> steps = ImmutableList.of(
-                new CreateParsers(generatedRoot),
-                new AppendTypeUrlGetter(generatedRoot),
-                new GenerateIndexFile(generatedRoot),
-                new ResolveImports(generatedRoot, modules)
-        );
-        return steps;
-    }
-
-    private static Directory generatedRootFor(Project project, SourceSetName ssn) {
-        DefaultJsPaths jsPaths = DefaultJsPaths.at(project.getProjectDir());
-        Path subDir = jsPaths.generated()
-                             .path()
-                             .resolve(ssn.getValue());
-        Directory generatedRoot = Directory.at(subDir);
-        return generatedRoot;
     }
 }
