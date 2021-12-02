@@ -44,7 +44,7 @@ import static io.spine.tools.fs.ExternalModule.predefinedModules;
  * task to configure when it will be executed during the build lifecycle.
  */
 @SuppressWarnings("PublicField" /* Expose fields as a Gradle extension */)
-public class McJsExtension {
+public class McJsOptions {
 
     /**
      * The name of the extension as it appears in a Gradle script under {@code modelCompiler}.
@@ -89,13 +89,19 @@ public class McJsExtension {
     /**
      * Creates the extension in the given project.
      */
-    static McJsExtension createIn(Project project) {
+    static McJsOptions createIn(Project project) {
         ExtensionContainer extensions = project.getExtensions();
-        McJsExtension extension = (McJsExtension) extensions.create(NAME, McJsExtension.class);
+        McJsOptions extension = (McJsOptions) extensions.create(NAME, McJsOptions.class);
         return extension;
     }
 
-    ExternalModules modules() {
+    static McJsOptions in(Project project) {
+        return (McJsOptions)
+                project.getExtensions()
+                       .getByName(NAME);
+    }
+
+    ExternalModules combinedModules() {
         ExternalModules combined =
                 new ExternalModules(modules)
                         .with(predefinedModules());
@@ -117,11 +123,5 @@ public class McJsExtension {
      */
     void setGenerateParsersTask(Task generateParsersTask) {
         this.generateParsersTask = generateParsersTask;
-    }
-
-    static McJsExtension extension(Project project) {
-        return (McJsExtension)
-                project.getExtensions()
-                       .getByName(NAME);
     }
 }

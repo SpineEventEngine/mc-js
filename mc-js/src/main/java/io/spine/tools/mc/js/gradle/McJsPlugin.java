@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 
 import static io.spine.tools.gradle.project.Projects.getSourceSetNames;
 import static io.spine.tools.gradle.task.BaseTaskName.build;
-import static io.spine.tools.mc.js.gradle.McJsExtension.extension;
+import static io.spine.tools.mc.js.gradle.McJsOptions.in;
 import static io.spine.tools.mc.js.gradle.McJsTaskName.generateJsonParsers;
 import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
 
@@ -72,7 +72,7 @@ import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
  * </ul>
  *
  * <p>The main plugin action may be retrieved and configured as necessary via the
- * {@linkplain McJsExtension "protoJs" extension}. By default, the action is a dependency of the
+ * {@linkplain McJsOptions "protoJs" extension}. By default, the action is a dependency of the
  * {@linkplain io.spine.tools.gradle.task.BaseTaskName#build build} task.
  *
  * <p>This plugin currently relies on the set of the hard-coded Gradle settings which have to be
@@ -89,14 +89,14 @@ public class McJsPlugin extends LanguagePlugin {
 
     @SuppressWarnings("unchecked")
     public McJsPlugin() {
-        super(McJsExtension.NAME, getKotlinClass(McJsExtension.class));
+        super(McJsOptions.NAME, getKotlinClass(McJsOptions.class));
     }
 
     @Override
     public void apply(Project project) {
         super.apply(project);
         ProtocConfig.applyTo(project);
-        McJsExtension extension = McJsExtension.createIn(project);
+        McJsOptions extension = McJsOptions.createIn(project);
         Task task = createTaskIn(project);
         extension.setGenerateParsersTask(task);
     }
@@ -133,7 +133,7 @@ public class McJsPlugin extends LanguagePlugin {
     }
 
     private static void generateFor(Project project, SourceSetName ssn) {
-        ExternalModules modules = extension(project).modules();
+        ExternalModules modules = in(project).combinedModules();
         generateCode(project, ssn, modules);
     }
 

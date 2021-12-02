@@ -28,9 +28,6 @@ package io.spine.tools.mc.js.gradle;
 
 import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.gradle.SourceSetName;
-import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.PluginManager;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -39,21 +36,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.spine.code.proto.FileDescriptors.DESC_EXTENSION;
-import static io.spine.tools.gradle.project.Projects.descriptorSetFile;
-import static io.spine.tools.mc.js.gradle.McJsExtension.extension;
+import static io.spine.tools.mc.js.gradle.McJsOptions.in;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Extension should")
-class McJsExtensionTest {
+@DisplayName("`McJsExtension` should")
+class McJsOptionsTest {
 
     private static final String PLUGIN_ID = "io.spine.mc-js";
 
@@ -61,17 +54,15 @@ class McJsExtensionTest {
     private static final String VERSION = "42";
 
     private Project project;
-    private DefaultJsPaths defaultPaths;
 
     @BeforeEach
     void setUp(@TempDir Path tempDirPath) {
         project = ProjectBuilder.builder()
-                                .withProjectDir(tempDirPath.toFile())
-                                .build();
+                .withProjectDir(tempDirPath.toFile())
+                .build();
         PluginManager pluginManager = project.getPluginManager();
         pluginManager.apply("java");
         pluginManager.apply(PLUGIN_ID);
-        defaultPaths = DefaultJsPaths.at(project.getProjectDir());
 
         project.setGroup(GROUP_ID);
         project.setVersion(VERSION);
@@ -83,12 +74,12 @@ class McJsExtensionTest {
         String moduleName = "foo-bar";
         Map<String, List<String>> modulesExt = pluginExtension().modules;
         modulesExt.put(moduleName, emptyList());
-        ExternalModules modules = pluginExtension().modules();
+        ExternalModules modules = pluginExtension().combinedModules();
         assertThat(modules.asList())
                 .contains(new ExternalModule(moduleName, emptyList()));
     }
 
-    private McJsExtension pluginExtension() {
-        return extension(project);
+    private McJsOptions pluginExtension() {
+        return in(project);
     }
 }
