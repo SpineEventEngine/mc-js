@@ -118,7 +118,7 @@ public final class CreateParsers extends CodeGenStep {
     }
 
     /**
-     * Obtains the code with parsers for specified types.
+     * Obtains the code with parsers for the specified types.
      *
      * @param messageTypes
      *         all messages in a file to generate parser for
