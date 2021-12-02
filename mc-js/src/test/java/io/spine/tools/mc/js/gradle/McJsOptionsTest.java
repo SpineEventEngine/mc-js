@@ -43,9 +43,8 @@ import java.util.Map;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.mc.js.gradle.McJsOptions.in;
 import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("`McJsExtension` should")
+@DisplayName("`McJsOptions` should")
 class McJsOptionsTest {
 
     private static final String PLUGIN_ID = "io.spine.mc-js";
