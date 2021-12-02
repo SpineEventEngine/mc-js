@@ -48,6 +48,8 @@ import io.spine.internal.gradle.forceVersions
 import io.spine.internal.gradle.javac.configureErrorProne
 import io.spine.internal.gradle.javac.configureJavac
 import io.spine.internal.gradle.javadoc.JavadocConfig
+import io.spine.internal.gradle.kotlin.applyJvmToolchain
+import io.spine.internal.gradle.kotlin.setFreeCompilerArgs
 import io.spine.internal.gradle.publish.Publish.Companion.publishProtoArtifact
 import io.spine.internal.gradle.publish.PublishingRepos
 import io.spine.internal.gradle.publish.PublishingRepos.gitHub
@@ -55,6 +57,8 @@ import io.spine.internal.gradle.publish.spinePublishing
 import io.spine.internal.gradle.report.coverage.JacocoConfig
 import io.spine.internal.gradle.report.license.LicenseReporter
 import io.spine.internal.gradle.report.pom.PomGenerator
+import io.spine.internal.gradle.testing.configureLogging
+import io.spine.internal.gradle.testing.registerTestTasks
 import java.util.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -67,7 +71,7 @@ plugins {
     io.spine.internal.dependency.ErrorProne.GradlePlugin.apply {
         id(id)
     }
-    kotlin("jvm") version io.spine.internal.dependency.Kotlin.version
+    kotlin("jvm")
 }
 
 spinePublishing {
@@ -106,9 +110,6 @@ subprojects {
         plugin("net.ltgt.errorprone")
         plugin("pmd-settings")
         plugin(Protobuf.GradlePlugin.id)
-
-        from(Scripts.testOutput(project))
-        from(Scripts.testArtifacts(project))
     }
 
     dependencies {
@@ -128,7 +129,7 @@ subprojects {
     }
 
     val spineBaseVersion: String by extra
-
+    val toolBaseVersion: String by extra
     with(configurations) {
         forceVersions()
         excludeProtobufLite()
@@ -136,17 +137,12 @@ subprojects {
             resolutionStrategy {
                 force(
                     "io.spine:spine-base:$spineBaseVersion",
-                    "io.spine.tools:spine-testlib:$spineBaseVersion"
+                    "io.spine.tools:spine-testlib:$spineBaseVersion",
+                    "io.spine.tools:spine-tool-base:$toolBaseVersion",
+                    "io.spine.tools:spine-plugin-base:$toolBaseVersion"
                 )
             }
         }
-    }
-
-    val javaVersion = JavaVersion.VERSION_1_8
-
-    java {
-        sourceCompatibility = javaVersion
-        targetCompatibility = javaVersion
     }
 
     tasks.withType<JavaCompile> {
@@ -157,24 +153,24 @@ subprojects {
     JavadocConfig.applyTo(project)
     CheckStyleConfig.applyTo(project)
 
+    val javaVersion = 8
     kotlin {
+        applyJvmToolchain(javaVersion)
         explicitApi()
     }
 
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = javaVersion.toString()
-            freeCompilerArgs = listOf(
-                "-Xskip-prerelease-check",
-                "-Xjvm-default=all",
-                "-Xopt-in=kotlin.contracts.ExperimentalContracts"
-            )
-        }
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+        setFreeCompilerArgs()
     }
 
-    tasks.test {
-        useJUnitPlatform {
-            includeEngines("junit-jupiter")
+    tasks {
+        registerTestTasks()
+        test {
+            configureLogging()
+            useJUnitPlatform {
+                includeEngines("junit-jupiter")
+            }
         }
     }
 
@@ -220,11 +216,6 @@ subprojects {
     apply<VersionWriter>()
     publishProtoArtifact(project)
     LicenseReporter.generateReportIn(project)
-
-    apply {
-        from(Scripts.slowTests(project))
-        from(Scripts.testOutput(project))
-    }
 
     protobuf {
         generatedFilesBaseDir = generatedDir
