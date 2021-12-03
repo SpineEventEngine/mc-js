@@ -54,7 +54,7 @@ class GenerateIndexFileTest {
     static void compileProject() {
         GivenProject project = GivenProject.serving(GenerateIndexFileTest.class);
         fileSet = project.mainFileSet();
-        generatedProtoDir = project.mainProtoSources();
+        generatedProtoDir = project.generatedMainJsSources();
         task = new GenerateIndexFile(generatedProtoDir);
     }
 

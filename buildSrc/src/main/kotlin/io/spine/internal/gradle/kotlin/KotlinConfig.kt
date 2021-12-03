@@ -24,25 +24,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.fs;
+package io.spine.internal.gradle.kotlin
 
-import java.io.File;
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainSpec
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-import static java.lang.String.format;
-
-final class Given {
-
-    /** Prevents instantiation of this utility class. */
-    private Given() {
+/**
+ * Sets [Java toolchain](https://kotlinlang.org/docs/gradle.html#gradle-java-toolchains-support)
+ * to the specified version (e.g. "11" or "8").
+ */
+fun KotlinJvmProjectExtension.applyJvmToolchain(version: Int) {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(version))
     }
+}
 
-    static ImportStatement importWithPath(String path, File importOrigin) {
-        String importText = format("let foo = require('%s');", path);
-        JsFile file = new JsFile(importOrigin.toPath());
-        return new ImportStatement(file, importText);
-    }
-
-    static String relativeImportPath() {
-        return "../path-relative-to-parent.js";
+/**
+ * Opts-in to experimental features that we use in our codebase.
+ */
+fun KotlinCompile.setFreeCompilerArgs() {
+    kotlinOptions {
+        freeCompilerArgs = listOf(
+            "-Xskip-prerelease-check",
+            "-Xjvm-default=all",
+            "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+            "-Xopt-in=kotlin.ExperimentalStdlibApi"
+        )
     }
 }

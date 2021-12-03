@@ -30,19 +30,17 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.js.fs.Directory;
-import io.spine.tools.js.fs.FileName;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
+import io.spine.tools.js.fs.Directory;
+import io.spine.tools.js.fs.FileName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.step.CodeGenStep;
 import io.spine.tools.mc.js.code.text.Comment;
 import io.spine.tools.mc.js.code.text.Parser;
 import io.spine.tools.mc.js.fs.FileWriter;
 import io.spine.type.MessageType;
-
-import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.code.Line.emptyLine;
@@ -120,12 +118,12 @@ public final class CreateParsers extends CodeGenStep {
     }
 
     /**
-     * Obtains the code with parsers for specified types.
+     * Obtains the code with parsers for the specified types.
      *
      * @param messageTypes
      *         all messages in a file to generate parser for
      */
-    private static CodeWriter parses(Collection<MessageType> messageTypes) {
+    private static CodeWriter parses(ImmutableCollection<MessageType> messageTypes) {
         CodeWriter writer = new CodeWriter();
         for (MessageType message : messageTypes) {
             Parser parser = new Parser(message.descriptor());

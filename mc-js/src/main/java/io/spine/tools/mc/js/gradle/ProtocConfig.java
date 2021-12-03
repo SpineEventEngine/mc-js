@@ -27,36 +27,25 @@
 package io.spine.tools.mc.js.gradle;
 
 import com.google.protobuf.gradle.ExecutableLocator;
-import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.gradle.ProtocConfigurationPlugin;
-import io.spine.tools.js.fs.GeneratedRoot;
 import org.gradle.api.NamedDomainObjectContainer;
+import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
-import java.io.File;
-import java.nio.file.Path;
-
 /**
- * A Gradle plugin that performs additional {@code protoc} configurations relevant for
- * JavaScript projects.
+ * A Gradle plugin that performs {@code protoc} configurations relevant for JavaScript projects.
+ *
+ * @implNote Does not do anything in addition to the functionality provided by
+ *         the abstract base class.
  */
 final class ProtocConfig extends ProtocConfigurationPlugin {
 
-    @Override
-    protected File getTestDescriptorSet(Project project) {
-        return McJsExtension.getTestDescriptorSet(project);
-    }
-
-    @Override
-    protected Path generatedFilesBaseDir(Project project) {
-        DefaultJsPaths jsProject = DefaultJsPaths.at(project.getProjectDir());
-        GeneratedRoot generatedRoot = jsProject.generated();
-        return generatedRoot.path();
-    }
-
-    @Override
-    protected File getMainDescriptorSet(Project project) {
-        return McJsExtension.getMainDescriptorSet(project);
+    /**
+     * Creates a new instance of the plugin and applies it to the given project.
+     */
+    static void applyTo(Project project) {
+        Plugin<Project> plugin = new ProtocConfig();
+        plugin.apply(project);
     }
 
     @Override

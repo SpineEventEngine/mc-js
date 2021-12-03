@@ -61,7 +61,7 @@ class CodeGenStepTest {
     @BeforeAll
     static void compileProject() {
         GivenProject project = GivenProject.serving(CodeGenStepTest.class);
-        generatedProtoDir = project.mainProtoSources();
+        generatedProtoDir = project.generatedMainJsSources();
         mainFileSet = project.mainFileSet();
     }
 

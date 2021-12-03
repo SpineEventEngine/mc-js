@@ -28,6 +28,7 @@ package io.spine.tools.mc.js.code.given;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.gradle.SourceSetName;
 import io.spine.tools.gradle.testing.GradleProject;
 import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.js.fs.Directory;
@@ -37,12 +38,9 @@ import java.nio.file.Path;
 
 import static io.spine.code.proto.FileDescriptors.KNOWN_TYPES;
 import static io.spine.testing.TempDir.forClass;
-import static io.spine.tools.gradle.BaseTaskName.build;
+import static io.spine.tools.gradle.task.BaseTaskName.build;
 
 public final class GivenProject {
-
-    private static final String TASK_PROTO = "task.proto";
-    private static final String PROJECT_NAME = "mc-js-test";
 
     private final File projectDir;
     private boolean compiled = false;
@@ -56,14 +54,15 @@ public final class GivenProject {
     }
 
     public FileSet mainFileSet() {
-        Path mainDescriptorsDir = project().buildRoot()
-                                           .descriptors()
-                                           .mainDescriptors();
+        Path mainDescriptorsDir =
+                project().buildRoot()
+                         .descriptors()
+                         .forSourceSet(SourceSetName.main.toString());
         Path descriptorSetFile = mainDescriptorsDir.resolve(KNOWN_TYPES);
         return FileSet.parse(descriptorSetFile.toFile());
     }
 
-    public Directory mainProtoSources() {
+    public Directory generatedMainJsSources() {
         return project().generated()
                         .mainJs();
     }
@@ -84,11 +83,10 @@ public final class GivenProject {
     }
 
     private void compile() {
-        GradleProject gradleProject = GradleProject.newBuilder()
-                .setProjectName(PROJECT_NAME)
-                .setProjectFolder(projectDir)
-                .addProtoFile(TASK_PROTO)
-                .build();
+        GradleProject gradleProject = GradleProject.setupAt(projectDir)
+                .fromResources("mc-js-test")
+                .copyBuildSrc()
+                .create();
         gradleProject.executeTask(build);
     }
 }

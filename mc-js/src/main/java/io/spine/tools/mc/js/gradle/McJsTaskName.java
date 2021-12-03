@@ -27,10 +27,10 @@
 package io.spine.tools.mc.js.gradle;
 
 import io.spine.annotation.Internal;
-import io.spine.tools.gradle.TaskName;
+import io.spine.tools.gradle.task.TaskName;
 
 /**
- * Names of Gradle tasks defined by the Spine Protobuf JS plugin.
+ * Names of Gradle tasks defined by the Model Compiler for JS plugin.
  */
 @Internal
 public enum McJsTaskName implements TaskName {

@@ -26,30 +26,18 @@
 
 package io.spine.tools.mc.js.gradle;
 
-import com.google.common.collect.ImmutableList;
-import io.spine.code.proto.FileSet;
-import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.gradle.BaseTaskName;
-import io.spine.tools.gradle.GradleTask;
-import io.spine.tools.gradle.ProtoPlugin;
-import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.gradle.task.GradleTask;
+import io.spine.tools.mc.gradle.LanguagePlugin;
 import io.spine.tools.mc.js.code.index.CreateParsers;
 import io.spine.tools.mc.js.code.index.GenerateIndexFile;
 import io.spine.tools.mc.js.code.step.AppendTypeUrlGetter;
-import io.spine.tools.mc.js.code.step.CodeGenStep;
-import io.spine.tools.mc.js.code.step.ResolveImports;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 
-import java.io.File;
-import java.util.List;
-import java.util.function.Supplier;
-
-import static io.spine.tools.gradle.BaseTaskName.build;
+import static io.spine.tools.gradle.task.BaseTaskName.build;
 import static io.spine.tools.mc.js.gradle.McJsTaskName.generateJsonParsers;
-import static io.spine.tools.mc.js.gradle.McJsExtension.extension;
+import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
 
 /**
  * The Gradle plugin which performs additional code generation for Protobuf types.
@@ -69,8 +57,8 @@ import static io.spine.tools.mc.js.gradle.McJsExtension.extension;
  * </ul>
  *
  * <p>The main plugin action may be retrieved and configured as necessary via the
- * {@linkplain McJsExtension "protoJs" extension}. By default, the action is a dependency of the
- * {@linkplain BaseTaskName#build build} task.
+ * {@linkplain McJsOptions "protoJs" extension}. By default, the action is a dependency of the
+ * {@linkplain io.spine.tools.gradle.task.BaseTaskName#build build} task.
  *
  * <p>This plugin currently relies on the set of the hard-coded Gradle settings which have to be
  * set to the required values in a project willing to use the plugin. These settings are:
@@ -82,85 +70,28 @@ import static io.spine.tools.mc.js.gradle.McJsExtension.extension;
  * <p>The {@code build.gradle} file located under the {@code test/resources} folder of this module
  * can be used as an example of the required project configuration.
  */
-public class McJsPlugin extends ProtoPlugin {
+public class McJsPlugin extends LanguagePlugin {
+
+    @SuppressWarnings("unchecked")
+    public McJsPlugin() {
+        super(McJsOptions.NAME, getKotlinClass(McJsOptions.class));
+    }
 
     @Override
     public void apply(Project project) {
-        ProtocConfig configPlugin = new ProtocConfig();
-        configPlugin.apply(project);
-        McJsExtension extension = McJsExtension.createIn(project);
-        Action<Task> action = newAction(project);
-        GradleTask newTask = newTask(generateJsonParsers, action)
-                .insertBeforeTask(build)
-                .applyNowTo(project);
-
-        Task task = newTask.getTask();
+        super.apply(project);
+        ProtocConfig.applyTo(project);
+        McJsOptions extension = McJsOptions.createIn(project);
+        Task task = createTaskIn(project);
         extension.setGenerateParsersTask(task);
     }
 
-    /**
-     * Creates an {@code Action} to perform the additional generation of code
-     * for working with Protobuf types.
-     *
-     * <p>The action handles both main and test scopes.
-     *
-     * <p>The paths to the generated JS messages location, as well as to the descriptor set file,
-     * are currently hard-coded.
-     *
-     * <p>See {@link DefaultJsPaths} for the expected configuration.
-     */
-    private Action<Task> newAction(Project project) {
-        return task -> generateJsonParsers(project);
-    }
-
-    private void generateJsonParsers(Project project) {
-        generateForMain(project);
-        generateForTest(project);
-    }
-
-    @Override
-    protected Supplier<File> mainDescriptorFile(Project project) {
-        return () -> McJsExtension.getMainDescriptorSet(project);
-    }
-
-    @Override
-    protected Supplier<File> testDescriptorFile(Project project) {
-        return () -> McJsExtension.getTestDescriptorSet(project);
-    }
-
-    private void generateForMain(Project project) {
-        Directory generatedRoot = McJsExtension.getMainGenProto(project);
-        Supplier<FileSet> files = mainProtoFiles(project);
-        ExternalModules modules = extension(project).modules();
-        generateCode(generatedRoot, files, modules);
-    }
-
-    private void generateForTest(Project project) {
-        Directory generatedRoot = McJsExtension.getTestGenProtoDir(project);
-        Supplier<FileSet> files = testProtoFiles(project);
-        ExternalModules modules = extension(project).modules();
-        generateCode(generatedRoot, files, modules);
-    }
-
-    private static void generateCode(Directory generatedRoot,
-                                     Supplier<FileSet> files,
-                                     ExternalModules modules) {
-        List<CodeGenStep> steps = ImmutableList.of(
-                new CreateParsers(generatedRoot),
-                new AppendTypeUrlGetter(generatedRoot),
-                new GenerateIndexFile(generatedRoot),
-                new ResolveImports(generatedRoot, modules)
-        );
-        FileSet suppliedFiles = files.get();
-        for (CodeGenStep step : steps) {
-            step.performFor(suppliedFiles);
-        }
-    }
-
-    /**
-     * Obtains the extension name of the plugin.
-     */
-    static String extensionName() {
-        return McJsExtension.NAME;
+    private static Task createTaskIn(Project project) {
+        Action<Task> action = GenerateJsonParsers.newAction(project);
+        GradleTask newTask = GradleTask.newBuilder(generateJsonParsers, action)
+                .insertBeforeTask(build)
+                .applyNowTo(project);
+        Task task = newTask.getTask();
+        return task;
     }
 }

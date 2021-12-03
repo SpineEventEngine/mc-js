@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * An import line extracted from a source file for being
@@ -75,7 +76,8 @@ final class ImportStatement implements Element, Logging {
      *         the line with the statement
      */
     ImportStatement(JsFile file, String line) {
-        this(file.directory(), checkNotNull(line));
+        this(requireNonNull(file.parent(), "File has no parent."),
+             checkNotNull(line, "Null line passed."));
     }
 
     private ImportStatement(Path sourceDirectory, String line) {
