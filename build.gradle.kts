@@ -153,6 +153,8 @@ subprojects {
     JavadocConfig.applyTo(project)
     CheckStyleConfig.applyTo(project)
 
+    @Suppress("MagicNumber") /* There isn't a reliable way of converting
+                                        `JavaVersion.VERSION_1_8` to `8`, or vice versa. */
     val javaVersion = 8
     kotlin {
         applyJvmToolchain(javaVersion)
