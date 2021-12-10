@@ -73,7 +73,7 @@ import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
 public class McJsPlugin extends LanguagePlugin {
 
     public McJsPlugin() {
-        super(McJsOptions.NAME, getKotlinClass(McJsOptions.class));
+        super(McJsOptions.NAME, McJsOptions.class);
     }
 
     @Override
