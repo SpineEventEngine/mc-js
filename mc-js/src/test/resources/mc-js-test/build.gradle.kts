@@ -83,7 +83,7 @@ tasks.build {
     dependsOn(compileProtoToJs)
 }
 
-val spineBaseVersion: String by extra
+val baseVersion: String by extra
 val protobufVersion: String = io.spine.internal.dependency.Protobuf.version
 
 dependencies {

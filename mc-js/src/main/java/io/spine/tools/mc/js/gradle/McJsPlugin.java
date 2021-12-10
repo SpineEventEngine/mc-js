@@ -72,7 +72,6 @@ import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
  */
 public class McJsPlugin extends LanguagePlugin {
 
-    @SuppressWarnings("unchecked")
     public McJsPlugin() {
         super(McJsOptions.NAME, getKotlinClass(McJsOptions.class));
     }
@@ -91,7 +90,6 @@ public class McJsPlugin extends LanguagePlugin {
         GradleTask newTask = GradleTask.newBuilder(generateJsonParsers, action)
                 .insertBeforeTask(build)
                 .applyNowTo(project);
-        Task task = newTask.getTask();
-        return task;
+        return newTask.getTask();
     }
 }
