@@ -29,7 +29,7 @@ package io.spine.tools.mc.js.code.step;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.tools.code.Line;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.js.code.MethodReference;
 import io.spine.tools.js.code.TypeName;
 import io.spine.code.proto.FileSet;
@@ -54,7 +54,7 @@ public class AppendTypeUrlGetter extends CodeGenStep {
 
     private static final String METHOD_NAME = "typeUrl";
 
-    public AppendTypeUrlGetter(Directory generatedRoot) {
+    public AppendTypeUrlGetter(Generated generatedRoot) {
         super(generatedRoot);
     }
 

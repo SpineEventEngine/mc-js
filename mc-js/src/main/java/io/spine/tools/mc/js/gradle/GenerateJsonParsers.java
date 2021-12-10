@@ -29,10 +29,10 @@ package io.spine.tools.mc.js.gradle;
 import com.google.common.collect.ImmutableList;
 import io.spine.code.proto.FileSet;
 import io.spine.tools.fs.ExternalModules;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.gradle.ProtoFiles;
-import io.spine.tools.gradle.SourceSetName;
+import io.spine.tools.code.SourceSetName;
 import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 import io.spine.tools.mc.js.code.index.CreateParsers;
 import io.spine.tools.mc.js.code.index.GenerateIndexFile;
 import io.spine.tools.mc.js.code.step.AppendTypeUrlGetter;
@@ -42,7 +42,6 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -89,15 +88,16 @@ final class GenerateJsonParsers implements Action<Task> {
 
     private void generateFor(SourceSetName ssn) {
         Supplier<FileSet> files = ProtoFiles.collect(project, ssn);
-        ImmutableList<CodeGenStep> steps = createSteps(ssn);
+        ImmutableList<CodeGenStep> steps = createSteps();
         FileSet suppliedFiles = files.get();
         for (CodeGenStep step : steps) {
             step.performFor(suppliedFiles);
         }
     }
 
-    private ImmutableList<CodeGenStep> createSteps(SourceSetName ssn) {
-        Directory generatedRoot = generatedRootFor(ssn);
+    private ImmutableList<CodeGenStep> createSteps() {
+        DefaultJsPaths jsPaths = DefaultJsPaths.at(project.getProjectDir());
+        Generated generatedRoot = jsPaths.generated();
         ImmutableList<CodeGenStep> steps = ImmutableList.of(
                 new CreateParsers(generatedRoot),
                 new AppendTypeUrlGetter(generatedRoot),
@@ -105,14 +105,5 @@ final class GenerateJsonParsers implements Action<Task> {
                 new ResolveImports(generatedRoot, modules)
         );
         return steps;
-    }
-
-    private Directory generatedRootFor(SourceSetName ssn) {
-        DefaultJsPaths jsPaths = DefaultJsPaths.at(project.getProjectDir());
-        Path subDir = jsPaths.generated()
-                             .path()
-                             .resolve(ssn.getValue());
-        Directory generatedRoot = Directory.at(subDir);
-        return generatedRoot;
     }
 }

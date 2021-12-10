@@ -26,7 +26,7 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.ProtoBelongsToModule;
 
@@ -40,9 +40,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class CodeGenStep {
 
-    private final Directory generatedRoot;
+    private final Generated generatedRoot;
 
-    protected CodeGenStep(Directory generatedRoot) {
+    protected CodeGenStep(Generated generatedRoot) {
         this.generatedRoot = checkNotNull(generatedRoot);
     }
 
@@ -86,7 +86,7 @@ public abstract class CodeGenStep {
     /**
      * Obtains the root of the generated Protobuf sources.
      */
-    protected Directory generatedRoot() {
+    protected Generated generatedRoot() {
         return generatedRoot;
     }
 

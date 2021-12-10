@@ -30,7 +30,7 @@ import com.google.common.truth.IterableSubject;
 import io.spine.tools.fs.DirectoryPattern;
 import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.mc.js.code.given.GivenProject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -52,14 +52,14 @@ class ResolveImportsTest {
     private static final ExternalModule module = new ExternalModule(
             "test-module", DirectoryPattern.listOf("root-dir")
     );
-    private static Directory generatedProtoDir = null;
+    private static Generated generatedProtoDir = null;
     private static Path tempDirectory = null;
     private static Path testFile = null;
 
     @BeforeAll
     static void compileProject() {
         GivenProject project = GivenProject.serving(ResolveImportsTest.class);
-        generatedProtoDir = project.generatedMainJsSources();
+        generatedProtoDir = project.generated();
         tempDirectory = generatedProtoDir.path();
         testFile = tempDirectory.resolve("js/with-imports.js");
     }

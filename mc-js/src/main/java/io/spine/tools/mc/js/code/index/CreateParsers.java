@@ -33,7 +33,7 @@ import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.step.CodeGenStep;
@@ -55,7 +55,7 @@ import static io.spine.tools.mc.js.code.text.Parser.importTypeParsersIn;
  */
 public final class CreateParsers extends CodeGenStep {
 
-    public CreateParsers(Directory generatedRoot) {
+    public CreateParsers(Generated generatedRoot) {
         super(checkNotNull(generatedRoot));
     }
 

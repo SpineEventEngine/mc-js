@@ -31,8 +31,9 @@ import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.FileSet;
 import io.spine.logging.Logging;
 import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.js.fs.FileName;
+import io.spine.tools.js.fs.JsFiles;
 import io.spine.tools.mc.js.fs.JsFile;
 
 import java.nio.file.Path;
@@ -51,7 +52,7 @@ public final class ResolveImports extends CodeGenStep implements Logging {
 
     private final ExternalModules modules;
 
-    public ResolveImports(Directory generatedRoot, ExternalModules modules) {
+    public ResolveImports(Generated generatedRoot, ExternalModules modules) {
         super(generatedRoot);
         this.modules = checkNotNull(modules);
     }
@@ -61,7 +62,7 @@ public final class ResolveImports extends CodeGenStep implements Logging {
         for (FileDescriptor file : fileSet.files()) {
             FileName fileName = FileName.from(file);
             _debug().log("Resolving imports in the file `%s`.", fileName);
-            Path filePath = generatedRoot().resolve(fileName);
+            Path filePath = JsFiles.resolve(generatedRoot(), fileName);
             resolveInFile(filePath);
         }
     }

@@ -27,7 +27,9 @@
 package io.spine.tools.mc.js.fs;
 
 import io.spine.js.generate.TaskProto;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
+import io.spine.tools.js.fs.JsFiles;
+import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +44,7 @@ import java.nio.file.Path;
 import static io.spine.tools.mc.js.code.given.FileWriters.assertFileContains;
 import static io.spine.tools.mc.js.code.given.FileWriters.assertFileNotContains;
 
-@DisplayName("FileWriter should")
+@DisplayName("`FileWriter` should")
 class FileWriterTest {
 
     private static final FileName TASKS_JS = FileName.from(TaskProto.getDescriptor()
@@ -55,9 +57,9 @@ class FileWriterTest {
 
     @BeforeEach
     void setUp(@TempDir Path tempDir) throws IOException {
-        Directory directory = Directory.at(tempDir);
+        Generated directory = DefaultJsPaths.at(tempDir).generated();
         writer = FileWriter.newInstance(directory, TASKS_JS);
-        filePath = directory.resolve(TASKS_JS);
+        filePath = JsFiles.resolve(directory, TASKS_JS);
         Files.createDirectories(filePath.getParent());
     }
 

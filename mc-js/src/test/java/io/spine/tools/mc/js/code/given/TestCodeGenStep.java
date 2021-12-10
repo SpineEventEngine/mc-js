@@ -26,6 +26,7 @@
 
 package io.spine.tools.mc.js.code.given;
 
+import io.spine.tools.fs.Generated;
 import io.spine.tools.js.fs.Directory;
 import io.spine.code.proto.FileSet;
 import io.spine.tools.mc.js.code.step.CodeGenStep;
@@ -44,7 +45,7 @@ public class TestCodeGenStep extends CodeGenStep {
     @Nullable
     private FileSet processedFileSet;
 
-    public TestCodeGenStep(Directory generatedRoot) {
+    public TestCodeGenStep(Generated generatedRoot) {
         super(generatedRoot);
     }
 

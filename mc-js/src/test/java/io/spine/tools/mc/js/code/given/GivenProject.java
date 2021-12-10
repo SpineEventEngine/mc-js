@@ -28,10 +28,10 @@ package io.spine.tools.mc.js.code.given;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.spine.code.proto.FileSet;
-import io.spine.tools.gradle.SourceSetName;
+import io.spine.tools.code.SourceSetName;
+import io.spine.tools.fs.SourceDir;
 import io.spine.tools.gradle.testing.GradleProject;
 import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -62,9 +62,12 @@ public final class GivenProject {
         return FileSet.parse(descriptorSetFile.toFile());
     }
 
-    public Directory generatedMainJsSources() {
-        return project().generated()
-                        .mainJs();
+    public SourceDir generatedMainJsSources() {
+        return generated().dir(SourceSetName.main);
+    }
+
+    public DefaultJsPaths.GeneratedJs generated() {
+        return project().generated();
     }
 
     private DefaultJsPaths project() {

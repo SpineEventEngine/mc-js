@@ -28,8 +28,9 @@ package io.spine.tools.mc.js.code.step;
 
 import io.spine.code.proto.ProtoBelongsToModule;
 import io.spine.code.proto.SourceFile;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.js.fs.FileName;
+import io.spine.tools.js.fs.JsFiles;
 
 import java.nio.file.Path;
 
@@ -41,7 +42,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 final class CompiledProtoBelongsToModule extends ProtoBelongsToModule {
 
-    private final Directory generatedRoot;
+    private final Generated generatedRoot;
 
     /**
      * Creates a new instance.
@@ -49,7 +50,7 @@ final class CompiledProtoBelongsToModule extends ProtoBelongsToModule {
      * @param generatedRoot
      *         the root directory for generated Protobufs
      */
-    CompiledProtoBelongsToModule(Directory generatedRoot) {
+    CompiledProtoBelongsToModule(Generated generatedRoot) {
         super();
         checkNotNull(generatedRoot);
         this.generatedRoot = generatedRoot;
@@ -58,7 +59,7 @@ final class CompiledProtoBelongsToModule extends ProtoBelongsToModule {
     @Override
     protected Path resolve(SourceFile file) {
         FileName fileName = FileName.from(file.descriptor());
-        Path filePath = generatedRoot.resolve(fileName);
+        Path filePath = JsFiles.resolve(generatedRoot, fileName);
         return filePath;
     }
 }

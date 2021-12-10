@@ -28,9 +28,10 @@ package io.spine.tools.mc.js.code.step;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.js.fs.Directory;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.fs.Generated;
+import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.mc.js.code.given.GivenProject;
 import io.spine.tools.mc.js.code.given.TestCodeGenStep;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,7 +54,7 @@ class CodeGenStepTest {
 
     private static final String MISSING_PATH = "non-existent";
 
-    private static Directory generatedProtoDir = null;
+    private static Generated generatedProtoDir = null;
     private static FileSet mainFileSet = null;
 
     private TestCodeGenStep task;
@@ -61,7 +62,7 @@ class CodeGenStepTest {
     @BeforeAll
     static void compileProject() {
         GivenProject project = GivenProject.serving(CodeGenStepTest.class);
-        generatedProtoDir = project.generatedMainJsSources();
+        generatedProtoDir = project.generated();
         mainFileSet = project.mainFileSet();
     }
 
@@ -79,7 +80,9 @@ class CodeGenStepTest {
     @Test
     @DisplayName("recognize there are no generated files to process")
     void recognizeThereAreNoFiles() {
-        Directory nonExistentRoot = Directory.at(Paths.get(MISSING_PATH));
+        Generated nonExistentRoot =
+                DefaultJsPaths.at(Paths.get(MISSING_PATH))
+                              .generated();
         TestCodeGenStep task = new TestCodeGenStep(nonExistentRoot);
         assertNotPerformed(task, mainFileSet);
     }
@@ -108,7 +111,7 @@ class CodeGenStepTest {
     @Test
     @DisplayName("skip files not compiled to JavaScript")
     void skipNotCompiledJsFiles(@TempDir Path tempDir) {
-        Directory emptyDirectory = Directory.at(tempDir);
+        Generated emptyDirectory = DefaultJsPaths.at(tempDir).generated();
         TestCodeGenStep task = new TestCodeGenStep(emptyDirectory);
         FileSet passedFiles = mainFileSet;
         // Check the file set is originally not empty.
