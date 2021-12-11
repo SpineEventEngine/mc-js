@@ -264,7 +264,7 @@ class CodeWriterTest {
     @DisplayName("concatenate all lines of code with correct indent in `toString`")
     void provideToString() {
         var jsOutput = GivenWriter.newCodeLines("line 1");
-        jsOutput.increaseDepth()
+        jsOutput.increaseDepth();
         jsOutput.append("line 2");
         var output = jsOutput.toString();
         var expected = "line 1" + lineSeparator() + "  line 2";
