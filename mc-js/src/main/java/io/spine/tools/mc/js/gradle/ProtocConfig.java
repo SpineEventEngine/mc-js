@@ -29,7 +29,6 @@ package io.spine.tools.mc.js.gradle;
 import com.google.protobuf.gradle.ExecutableLocator;
 import io.spine.tools.gradle.ProtocConfigurationPlugin;
 import org.gradle.api.NamedDomainObjectContainer;
-import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
 /**
@@ -44,7 +43,7 @@ final class ProtocConfig extends ProtocConfigurationPlugin {
      * Creates a new instance of the plugin and applies it to the given project.
      */
     static void applyTo(Project project) {
-        Plugin<Project> plugin = new ProtocConfig();
+        var plugin = new ProtocConfig();
         plugin.apply(project);
     }
 
