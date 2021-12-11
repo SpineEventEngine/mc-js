@@ -31,23 +31,25 @@ import io.spine.tools.js.code.TypeName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 
-@DisplayName("VariableDeclaration should")
+@DisplayName("`VariableDeclaration` should")
 class LetTest {
 
     @Test
     @DisplayName("be initialized by value")
     void initializedByValue() {
-        Let line = Let.withValue("someVariable", "someValue");
-        assertEquals("let someVariable = someValue;", line.text());
+        var line = Let.withValue("someVariable", "someValue");
+        assertThat(line.text())
+                .isEqualTo("let someVariable = someValue;");
     }
 
     @Test
     @DisplayName("be initialized by new instance")
     void initializedByNewInstance() {
-        TypeName type = TypeName.from(Any.getDescriptor());
-        Let line = Let.newInstance("anyValue", type);
-        assertEquals("let anyValue = new proto.google.protobuf.Any();", line.text());
+        var type = TypeName.from(Any.getDescriptor());
+        var line = Let.newInstance("anyValue", type);
+        assertThat(line.text())
+                .isEqualTo("let anyValue = new proto.google.protobuf.Any();");
     }
 }

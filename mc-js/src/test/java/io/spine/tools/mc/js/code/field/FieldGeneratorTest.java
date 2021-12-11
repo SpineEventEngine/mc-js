@@ -72,8 +72,8 @@ class FieldGeneratorTest {
     @Test
     @DisplayName("acquire field value by field JSON name")
     void acquireJsObject() {
-        String fieldValue = singularGenerator.acquireFieldValue();
-        String expected = OBJECT_NAME + '.' + singularField().getJsonName();
+        var fieldValue = singularGenerator.acquireFieldValue();
+        var expected = OBJECT_NAME + '.' + singularField().getJsonName();
         assertEquals(expected, fieldValue);
     }
 
@@ -85,21 +85,21 @@ class FieldGeneratorTest {
         @DisplayName("JS list items in case of repeated field")
         void repeated() {
             repeatedGenerator.iterateListValues(JS_OBJECT);
-            String forEach = JS_OBJECT + ".forEach";
+            var forEach = JS_OBJECT + ".forEach";
             assertContains(jsOutput, forEach);
-            String forEachItems = '(' + LIST_ITEM + ", index, array)";
+            var forEachItems = '(' + LIST_ITEM + ", index, array)";
             assertContains(jsOutput, forEachItems);
         }
 
         @Test
         @DisplayName("JS object own properties in case of map field")
         void map() {
-            String value = mapGenerator.iterateOwnAttributes(JS_OBJECT);
-            String iteration = "for (let " + ATTRIBUTE + " in " + JS_OBJECT + ')';
+            var value = mapGenerator.iterateOwnAttributes(JS_OBJECT);
+            var iteration = "for (let " + ATTRIBUTE + " in " + JS_OBJECT + ')';
             assertContains(jsOutput, iteration);
-            String ownPropertyCheck = "hasOwnProperty(" + ATTRIBUTE + ')';
+            var ownPropertyCheck = "hasOwnProperty(" + ATTRIBUTE + ')';
             assertContains(jsOutput, ownPropertyCheck);
-            String expected = JS_OBJECT + '[' + ATTRIBUTE + ']';
+            var expected = JS_OBJECT + '[' + ATTRIBUTE + ']';
             assertEquals(expected, value);
         }
     }
@@ -107,20 +107,19 @@ class FieldGeneratorTest {
     @Test
     @DisplayName("call field value precondition to check field value for null")
     void callPrecondition() {
-        String fieldValue = singularGenerator.acquireFieldValue();
+        var fieldValue = singularGenerator.acquireFieldValue();
         singularGenerator.generate();
-        String nullCheck = "if (" + fieldValue + " === null)";
+        var nullCheck = "if (" + fieldValue + " === null)";
         assertContains(jsOutput, nullCheck);
     }
 
     @Test
     @DisplayName("call field value parser to parse field value")
     void callParser() {
-        String fieldValue = singularGenerator.acquireFieldValue();
+        var fieldValue = singularGenerator.acquireFieldValue();
         singularGenerator.generate();
         TypeUrl typeUrl = TypeUrl.from(singularField().getMessageType());
-        String parserCall = format("TypeParsers.parserFor('%s').fromObject(%s);",
-                                   typeUrl, fieldValue);
+        var parserCall = format("TypeParsers.parserFor('%s').fromObject(%s);", typeUrl, fieldValue);
         assertContains(jsOutput, parserCall);
     }
 
@@ -136,9 +135,9 @@ class FieldGeneratorTest {
     @DisplayName("set singular field")
     void setSingular() {
         singularGenerator.generate();
-        FieldName fieldName = FieldName.from(singularField());
-        String setterCall = format("%s.set%s(%s)",
-                                   singularGenerator.targetVariable(), fieldName, FIELD_VALUE);
+        var fieldName = FieldName.from(singularField());
+        var setterCall = format("%s.set%s(%s)",
+                                singularGenerator.targetVariable(), fieldName, FIELD_VALUE);
         assertContains(jsOutput, setterCall);
     }
 
@@ -146,9 +145,9 @@ class FieldGeneratorTest {
     @DisplayName("add value to repeated field")
     void addToRepeated() {
         repeatedGenerator.generate();
-        FieldName fieldName = FieldName.from(repeatedField());
-        String addCall = format("%s.add%s(%s)",
-                                repeatedGenerator.targetVariable(), fieldName, FIELD_VALUE);
+        var fieldName = FieldName.from(repeatedField());
+        var addCall = format("%s.add%s(%s)",
+                             repeatedGenerator.targetVariable(), fieldName, FIELD_VALUE);
         assertContains(jsOutput, addCall);
     }
 
@@ -156,10 +155,10 @@ class FieldGeneratorTest {
     @DisplayName("add value to map field")
     void addToMap() {
         mapGenerator.generate();
-        FieldName fieldName = FieldName.from(mapField());
-        String getMapCall = "get" + fieldName + "Map()";
-        String addToMapCall = "set(" + MAP_KEY + ", " + FIELD_VALUE + ')';
-        String addCall = mapGenerator.targetVariable() + '.' + getMapCall + '.' + addToMapCall;
+        var fieldName = FieldName.from(mapField());
+        var getMapCall = "get" + fieldName + "Map()";
+        var addToMapCall = "set(" + MAP_KEY + ", " + FIELD_VALUE + ')';
+        var addCall = mapGenerator.targetVariable() + '.' + getMapCall + '.' + addToMapCall;
         assertContains(jsOutput, addCall);
     }
 
@@ -176,7 +175,7 @@ class FieldGeneratorTest {
     }
 
     private FieldGenerator fieldGenerator(FieldDescriptor descriptor) {
-        FieldToParse fieldToParse = new FieldToParse(descriptor, OBJECT_NAME, MESSAGE_NAME);
+        var fieldToParse = new FieldToParse(descriptor, OBJECT_NAME, MESSAGE_NAME);
         return FieldGenerators.createFor(fieldToParse, jsOutput);
     }
 }

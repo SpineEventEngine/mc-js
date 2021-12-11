@@ -35,6 +35,7 @@ import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
 import io.spine.js.generate.TaskId;
 import io.spine.option.OptionsProto;
+import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.SourceDir;
 import io.spine.tools.js.code.TypeName;
 import io.spine.tools.js.fs.FileName;
@@ -76,7 +77,7 @@ class CreateParsersTest {
         GivenProject project = GivenProject.serving(CreateParsersTest.class);
         fileSet = project.mainFileSet();
         generatedProtoDir = project.generatedMainJsSources();
-        writer = new CreateParsers(project.generated());
+        writer = new CreateParsers(project.generated().dir(SourceSetName.main));
     }
 
     @Test

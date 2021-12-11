@@ -31,27 +31,27 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Return")
+@DisplayName("`Return` should generate")
 class ReturnTest {
 
     @Test
     @DisplayName("an object")
     void object() {
-        Return line = Return.value(5);
+        var line = Return.value(5);
         assertEquals("return 5;", line.text());
     }
 
     @Test
     @DisplayName("a string literal")
     void stringLiteral() {
-        Return line = Return.stringLiteral("foo");
+        var line = Return.stringLiteral("foo");
         assertEquals("return 'foo';", line.text());
     }
 
     @Test
-    @DisplayName("null reference")
+    @DisplayName("`null` reference")
     void nullValue() {
-        Return nullValue = Return.nullReference();
+        var nullValue = Return.nullReference();
         assertEquals("return null;", nullValue.text());
     }
 }

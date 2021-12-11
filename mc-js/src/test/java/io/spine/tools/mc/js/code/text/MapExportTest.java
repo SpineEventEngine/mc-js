@@ -26,8 +26,6 @@
 
 package io.spine.tools.mc.js.code.text;
 
-import com.google.common.truth.StringSubject;
-import io.spine.tools.mc.js.code.CodeWriter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -41,13 +39,13 @@ class MapExportTest {
     @Test
     @DisplayName("be initialized with several entries")
     void withSeveralEntries() {
-        MapExport map = MapExport.newBuilder(MAP_NAME)
+        var map = MapExport.newBuilder(MAP_NAME)
                 .withEntry("firstKey", 1)
                 .withEntry("lastKey", 999)
                 .build();
-        CodeWriter lines = map.writer();
-        String stringRepresentation = lines.toString();
-        StringSubject assertRepresentation = assertThat(stringRepresentation);
+        var lines = map.writer();
+        var stringRepresentation = lines.toString();
+        var assertRepresentation = assertThat(stringRepresentation);
         assertRepresentation.contains("module.exports.map = new Map([");
         assertRepresentation.contains("  ['firstKey', 1],");
         assertRepresentation.contains("  ['lastKey', 999]");

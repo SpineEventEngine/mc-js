@@ -27,9 +27,8 @@
 package io.spine.tools.mc.js.code.index;
 
 import com.google.protobuf.Descriptors.FileDescriptor;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
-import io.spine.tools.fs.Generated;
-import io.spine.tools.js.fs.Directory;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.js.fs.JsFiles;
 import io.spine.tools.mc.js.code.CodeWriter;
@@ -40,6 +39,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 
+import static io.spine.tools.code.SourceSetName.main;
 import static io.spine.tools.js.fs.LibraryFile.INDEX;
 import static io.spine.tools.mc.js.code.given.Generators.assertContains;
 import static java.nio.file.Files.exists;
@@ -49,22 +49,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GenerateIndexFileTest {
 
     private static FileSet fileSet = null;
-    private static Generated generatedProtoDir = null;
+    private static SourceCodeDirectory generatedJsDir = null;
     private static GenerateIndexFile task = null;
 
     @BeforeAll
     static void compileProject() {
         GivenProject project = GivenProject.serving(GenerateIndexFileTest.class);
         fileSet = project.mainFileSet();
-        generatedProtoDir = project.generated();
-        task = new GenerateIndexFile(generatedProtoDir);
+        generatedJsDir = project.generated().dir(main);
+        task = new GenerateIndexFile(generatedJsDir);
     }
 
     @Test
     @DisplayName("write known types map to JS file")
     void writeKnownTypes() {
         task.performFor(fileSet);
-        Path knownTypes = JsFiles.resolve(generatedProtoDir, INDEX.fileName());
+        Path knownTypes = JsFiles.resolve(generatedJsDir, INDEX.fileName());
         assertTrue(exists(knownTypes));
     }
 

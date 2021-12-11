@@ -114,7 +114,7 @@ class ParserTest {
     void parsePrimitive() {
         parser = createFor(primitiveField(), writer);
         parser.parseIntoVariable(VALUE, VARIABLE);
-        String code = "let " + VARIABLE + " = parseInt(" + VALUE + ')';
+        var code = "let " + VARIABLE + " = parseInt(" + VALUE + ')';
         assertContains(code);
     }
 
@@ -125,7 +125,7 @@ class ParserTest {
         parser.parseIntoVariable(VALUE, VARIABLE);
         EnumDescriptor enumType = enumField().getEnumType();
         TypeName typeName = TypeName.from(enumType);
-        String code = "let " + VARIABLE + " = " + typeName + '[' + VALUE + ']';
+        var code = "let " + VARIABLE + " = " + typeName + '[' + VALUE + ']';
         assertContains(code);
     }
 
@@ -142,8 +142,8 @@ class ParserTest {
     void parseWellKnown() {
         parser = createFor(messageField(), writer);
         parser.parseIntoVariable(VALUE, VARIABLE);
-        TypeUrl typeUrl = TypeUrl.from(messageField().getMessageType());
-        String code = format("TypeParsers.parserFor('%s').fromObject(%s);", typeUrl, VALUE);
+        var typeUrl = TypeUrl.from(messageField().getMessageType());
+        var code = format("TypeParsers.parserFor('%s').fromObject(%s);", typeUrl, VALUE);
         assertContains(code);
     }
 }

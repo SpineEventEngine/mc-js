@@ -28,14 +28,10 @@ package io.spine.tools.mc.js.gradle;
 
 import io.spine.testing.TempDir;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
-import org.gradle.api.tasks.TaskContainer;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 import static io.spine.tools.gradle.task.BaseTaskName.build;
 import static io.spine.tools.mc.js.gradle.McJsTaskName.generateJsonParsers;
@@ -48,7 +44,7 @@ class McJsPluginTest {
 
     @BeforeEach
     void setUp() {
-        File tempDir = TempDir.forClass(getClass());
+        var tempDir = TempDir.forClass(getClass());
         project = ProjectBuilder.builder()
                 .withProjectDir(tempDir)
                 .build();
@@ -60,8 +56,8 @@ class McJsPluginTest {
     void addTaskToGenerateCode() {
         project.getPluginManager()
                .apply(McJsPlugin.class);
-        TaskContainer tasks = project.getTasks();
-        Task task = tasks.findByName(generateJsonParsers.name());
+        var tasks = project.getTasks();
+        var task = tasks.findByName(generateJsonParsers.name());
         assertNotNull(task);
     }
 }

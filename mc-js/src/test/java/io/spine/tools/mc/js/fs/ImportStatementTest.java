@@ -26,12 +26,10 @@
 
 package io.spine.tools.mc.js.fs;
 
-import io.spine.tools.fs.FileReference;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -51,27 +49,27 @@ class ImportStatementTest {
     @Test
     @DisplayName("extract the import path")
     void extractImportPath() {
-        FileReference fileReference = statement.fileRef();
+        var fileReference = statement.fileRef();
         assertThat(fileReference.value()).isEqualTo(relativeImportPath());
     }
 
     @Test
     @DisplayName("replace the import path")
     void replaceImportPath() {
-        String newPath = "b";
-        ImportStatement updatedStatement = statement.replaceRef(newPath);
-        FileReference updatedPath = updatedStatement.fileRef();
+        var newPath = "b";
+        var updatedStatement = statement.replaceRef(newPath);
+        var updatedPath = updatedStatement.fileRef();
         assertThat(updatedPath.value()).isEqualTo(newPath);
     }
 
     @Test
     @DisplayName("know about the absolute path to the imported file")
     void obtainImportedFilePath() {
-        Path importedFilePath = statement.importedFilePath();
-        Path expectedRoot =
+        var importedFilePath = statement.importedFilePath();
+        var expectedRoot =
                 importOrigin.getParentFile()
                             .toPath();
-        Path expectedPath =
+        var expectedPath =
                 expectedRoot.resolve(relativeImportPath())
                             .normalize();
         assertEquals(expectedPath, importedFilePath);

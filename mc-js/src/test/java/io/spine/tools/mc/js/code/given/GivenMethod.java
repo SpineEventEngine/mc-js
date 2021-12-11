@@ -37,7 +37,7 @@ public final class GivenMethod {
     }
 
     public static MethodReference methodReference() {
-        TypeName typeName = TypeName.from(Any.getDescriptor());
+        var typeName = TypeName.from(Any.getDescriptor());
         return MethodReference.onType(typeName, "testMethodName");
     }
 }

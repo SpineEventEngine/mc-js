@@ -40,7 +40,7 @@ public final class Generators {
     }
 
     public static void assertContains(CodeWriter writer, CharSequence toSearch) {
-        String codeString = writer.toString();
+        var codeString = writer.toString();
         assertThat(codeString).contains(toSearch);
     }
 }

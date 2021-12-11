@@ -68,7 +68,7 @@ class JsFileTest {
     void present() throws IOException {
         createFile();
 
-        JsFile jsFile = new JsFile(path);
+        var jsFile = new JsFile(path);
         assertThat(jsFile.path().toFile().exists())
                 .isTrue();
     }
@@ -78,7 +78,7 @@ class JsFileTest {
     void path() throws IOException {
         createFile();
 
-        JsFile jsFile = new JsFile(path);
+        var jsFile = new JsFile(path);
         assertThat(jsFile.path().toString())
                 .endsWith(fileName);
     }

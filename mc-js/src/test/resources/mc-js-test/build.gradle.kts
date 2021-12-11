@@ -33,7 +33,7 @@ plugins {
     java
     @Suppress("RemoveRedundantQualifierName") // Cannot use imports here.
     with(io.spine.internal.dependency.Protobuf.GradlePlugin) {
-        id(id).version(version)
+        id(id)
     }
 }
 
@@ -88,7 +88,7 @@ val protobufVersion: String = io.spine.internal.dependency.Protobuf.version
 
 dependencies {
     // Proto files coming from `base` are to be generated into JS.
-    protobuf("io.spine:spine-base:$spineBaseVersion:proto@jar")
+    protobuf("io.spine:spine-base:$baseVersion:proto@jar")
     
     // We want standard Google files to be used for imports.
     implementation("com.google.protobuf:protobuf-java:${protobufVersion}:sources@jar")

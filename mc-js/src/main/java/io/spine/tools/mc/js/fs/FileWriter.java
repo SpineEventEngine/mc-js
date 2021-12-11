@@ -28,9 +28,8 @@ package io.spine.tools.mc.js.fs;
 
 import com.google.common.base.Charsets;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.fs.Generated;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.tools.js.fs.FileName;
-import io.spine.tools.js.fs.LibraryFile;
 import io.spine.tools.mc.js.code.CodeWriter;
 
 import java.io.IOException;
@@ -63,25 +62,17 @@ public final class FileWriter {
     /**
      * Creates a new writer for the file with the specified location and the name.
      */
-    public static FileWriter newInstance(Generated directory, FileName fileName) {
-        Path filePath = resolve(directory, fileName);
+    public static FileWriter newInstance(SourceCodeDirectory directory, FileName fileName) {
+        var filePath = resolve(directory, fileName);
         return new FileWriter(filePath);
-    }
-
-    /**
-     * Creates a new instance which will operate on the specified library file located in
-     * the specified directory.
-     */
-    public static FileWriter newInstance(Generated directory, LibraryFile libraryFile) {
-        return newInstance(directory, libraryFile.fileName());
     }
 
     /**
      * Creates a new instance which will operate on the file pointed by the file descriptor
      * and located in the specified directory.
      */
-    public static FileWriter newInstance(Generated directory, FileDescriptor file) {
-        FileName fileName = FileName.from(file);
+    public static FileWriter newInstance(SourceCodeDirectory directory, FileDescriptor file) {
+        var fileName = FileName.from(file);
         return newInstance(directory, fileName);
     }
 

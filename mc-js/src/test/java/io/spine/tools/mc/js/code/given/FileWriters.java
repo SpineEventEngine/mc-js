@@ -47,16 +47,16 @@ public final class FileWriters {
     public static void
     assertFileContains(Path filePath, CharSequence toSearch) throws IOException {
         assertTrue(exists(filePath));
-        byte[] bytes = readAllBytes(filePath);
-        String fileContent = new String(bytes, Charsets.UTF_8);
+        var bytes = readAllBytes(filePath);
+        var fileContent = new String(bytes, Charsets.UTF_8);
         assertThat(fileContent).contains(toSearch);
     }
 
     public static void
     assertFileNotContains(Path filePath, CharSequence toSearch) throws IOException {
         assertTrue(exists(filePath));
-        byte[] bytes = readAllBytes(filePath);
-        String fileContent = new String(bytes, Charsets.UTF_8);
+        var bytes = readAllBytes(filePath);
+        var fileContent = new String(bytes, Charsets.UTF_8);
         assertThat(fileContent).doesNotContain(toSearch);
     }
 }

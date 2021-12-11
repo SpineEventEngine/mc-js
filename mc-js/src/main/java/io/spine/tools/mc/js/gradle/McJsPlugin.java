@@ -31,13 +31,11 @@ import io.spine.tools.mc.gradle.LanguagePlugin;
 import io.spine.tools.mc.js.code.index.CreateParsers;
 import io.spine.tools.mc.js.code.index.GenerateIndexFile;
 import io.spine.tools.mc.js.code.step.AppendTypeUrlGetter;
-import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 
 import static io.spine.tools.gradle.task.BaseTaskName.build;
 import static io.spine.tools.mc.js.gradle.McJsTaskName.generateJsonParsers;
-import static kotlin.jvm.JvmClassMappingKt.getKotlinClass;
 
 /**
  * The Gradle plugin which performs additional code generation for Protobuf types.
@@ -80,14 +78,14 @@ public class McJsPlugin extends LanguagePlugin {
     public void apply(Project project) {
         super.apply(project);
         ProtocConfig.applyTo(project);
-        McJsOptions extension = McJsOptions.createIn(project);
-        Task task = createTaskIn(project);
+        var extension = McJsOptions.createIn(project);
+        var task = createTaskIn(project);
         extension.setGenerateParsersTask(task);
     }
 
     private static Task createTaskIn(Project project) {
-        Action<Task> action = GenerateJsonParsers.newAction(project);
-        GradleTask newTask = GradleTask.newBuilder(generateJsonParsers, action)
+        var action = GenerateJsonParsers.newAction(project);
+        var newTask = GradleTask.newBuilder(generateJsonParsers, action)
                 .insertBeforeTask(build)
                 .applyNowTo(project);
         return newTask.getTask();

@@ -34,7 +34,6 @@ import io.spine.tools.gradle.testing.GradleProject;
 import io.spine.tools.js.fs.DefaultJsPaths;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import static io.spine.code.proto.FileDescriptors.KNOWN_TYPES;
 import static io.spine.testing.TempDir.forClass;
@@ -54,11 +53,11 @@ public final class GivenProject {
     }
 
     public FileSet mainFileSet() {
-        Path mainDescriptorsDir =
+        var mainDescriptorsDir =
                 project().buildRoot()
                          .descriptors()
                          .forSourceSet(SourceSetName.main.toString());
-        Path descriptorSetFile = mainDescriptorsDir.resolve(KNOWN_TYPES);
+        var descriptorSetFile = mainDescriptorsDir.resolve(KNOWN_TYPES);
         return FileSet.parse(descriptorSetFile.toFile());
     }
 
@@ -72,7 +71,7 @@ public final class GivenProject {
 
     private DefaultJsPaths project() {
         compiled();
-        DefaultJsPaths project = DefaultJsPaths.at(projectDir);
+        var project = DefaultJsPaths.at(projectDir);
         return project;
     }
 
@@ -86,7 +85,7 @@ public final class GivenProject {
     }
 
     private void compile() {
-        GradleProject gradleProject = GradleProject.setupAt(projectDir)
+        var gradleProject = GradleProject.setupAt(projectDir)
                 .fromResources("mc-js-test")
                 .copyBuildSrc()
                 .create();

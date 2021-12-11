@@ -45,31 +45,31 @@ public final class Given {
     }
 
     public static FileDescriptor file() {
-        FileDescriptor file = message().getFile();
+        var file = message().getFile();
         return file;
     }
 
     public static Descriptor message() {
-        Descriptor message = FieldContainer.getDescriptor();
+        var message = FieldContainer.getDescriptor();
         return message;
     }
 
-    public static Type typeFor(Descriptors.GenericDescriptor descriptor) {
-        TypeName typeName = TypeName.of(descriptor.getFullName());
-        FileDescriptor file = descriptor.getFile();
-        TypeSet typeSet = TypeSet.from(file);
+    public static Type<?, ?> typeFor(Descriptors.GenericDescriptor descriptor) {
+        var typeName = TypeName.of(descriptor.getFullName());
+        var file = descriptor.getFile();
+        var typeSet = TypeSet.from(file);
         return typeSet
                 .find(typeName)
                 .orElseThrow(() -> newIllegalStateException("Cannot find Type %s.", typeName));
     }
 
-    public static Type messageType() {
-        Descriptor descriptor = StringValue.getDescriptor();
+    public static Type<?, ?> messageType() {
+        var descriptor = StringValue.getDescriptor();
         return typeFor(descriptor);
     }
 
-    public static Type enumType() {
-        Descriptors.EnumDescriptor descriptor = NullValue.getDescriptor();
+    public static Type<?, ?> enumType() {
+        var descriptor = NullValue.getDescriptor();
         return typeFor(descriptor);
     }
 }

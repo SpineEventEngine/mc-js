@@ -49,24 +49,24 @@ class ParserTest {
     @Test
     @DisplayName("generate `fromObject` method for message")
     void generateFromObject() {
-        CodeWriter snippet = parser.fromObjectMethod();
-        String expectedName = expectedParserName(message) + ".prototype." + PARSE_METHOD;
-        String methodDeclaration = expectedName + " = function(" + FROM_OBJECT_ARG;
+        var snippet = parser.fromObjectMethod();
+        var expectedName = expectedParserName(message) + ".prototype." + PARSE_METHOD;
+        var methodDeclaration = expectedName + " = function(" + FROM_OBJECT_ARG;
         assertContains(snippet, methodDeclaration);
     }
 
     @Test
     @DisplayName("check parsed object for null in `fromObject` method")
     void checkJsObjectForNull() {
-        CodeWriter snippet = parser.fromObjectMethod();
-        String check = "if (" + FROM_OBJECT_ARG + " === null) {";
+        var snippet = parser.fromObjectMethod();
+        var check = "if (" + FROM_OBJECT_ARG + " === null) {";
         assertContains(snippet, check);
     }
 
     @Test
     @DisplayName("handle message fields in `fromObject` method")
     void handleMessageFields() {
-        CodeWriter lines = parser.fromObjectMethod();
+        var lines = parser.fromObjectMethod();
         for (FieldDescriptor fieldDescriptor : message.getFields()) {
             assertContains(lines, fieldDescriptor.getJsonName());
         }
@@ -75,7 +75,7 @@ class ParserTest {
     @Test
     @DisplayName("generate whole snippet")
     void generateWholeSnippet() {
-        CodeWriter lines = parser.writer();
+        var lines = parser.writer();
         assertCtorDeclaration(lines, message);
         assertPrototypeInitialization(lines, message);
         assertCtorInitialization(lines, message);
@@ -85,13 +85,13 @@ class ParserTest {
     @Test
     @DisplayName("allow to call the parse object method")
     void callParseObjectMethod() {
-        String call = Parser.parseMethodCall("someParser", "{}");
-        String expected = "someParser.fromObject({})";
+        var call = Parser.parseMethodCall("someParser", "{}");
+        var expected = "someParser.fromObject({})";
         assertThat(call).isEqualTo(expected);
     }
 
     private static void assertCtorDeclaration(CodeWriter lines, Descriptor message) {
-        String expected = expectedParserName(message) + " = function() {" + lineSeparator()
+        var expected = expectedParserName(message) + " = function() {" + lineSeparator()
                 + "  ObjectParser.call(this);" + lineSeparator()
                 + "};";
         assertThat(lines.toString()).contains(expected);

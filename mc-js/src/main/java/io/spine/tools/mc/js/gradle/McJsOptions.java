@@ -30,7 +30,6 @@ import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
-import org.gradle.api.plugins.ExtensionContainer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -90,8 +89,8 @@ public class McJsOptions {
      * Creates the extension in the given project.
      */
     static McJsOptions createIn(Project project) {
-        ExtensionContainer extensions = project.getExtensions();
-        McJsOptions extension = (McJsOptions) extensions.create(NAME, McJsOptions.class);
+        var extensions = project.getExtensions();
+        var extension = extensions.create(NAME, McJsOptions.class);
         return extension;
     }
 
@@ -102,9 +101,8 @@ public class McJsOptions {
     }
 
     ExternalModules combinedModules() {
-        ExternalModules combined =
-                new ExternalModules(modules)
-                        .with(predefinedModules());
+        var combined = new ExternalModules(modules)
+                .with(predefinedModules());
         return combined;
     }
 

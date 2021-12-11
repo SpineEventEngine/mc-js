@@ -30,9 +30,8 @@ import com.google.protobuf.Any;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.NullValue;
 import com.google.protobuf.StringValue;
-import io.spine.tools.js.code.TypeName;
 import io.spine.code.proto.FileSet;
-import io.spine.tools.mc.js.code.CodeWriter;
+import io.spine.tools.js.code.TypeName;
 import io.spine.type.TypeUrl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,9 +54,9 @@ class KnownTypesTest {
     @Test
     @DisplayName("generate known types map for several files")
     void generateKnownTypesMap() {
-        CodeWriter generatedLines = generator.writer();
-        String expectedForAny = expectedEntry(ANY) + ',';
-        String expectedForString = expectedEntry(STRING_VALUE) + ',';
+        var generatedLines = generator.writer();
+        var expectedForAny = expectedEntry(ANY) + ',';
+        var expectedForString = expectedEntry(STRING_VALUE) + ',';
         assertContains(generatedLines, expectedForAny);
         assertContains(generatedLines, expectedForString);
     }
@@ -65,14 +64,14 @@ class KnownTypesTest {
     @Test
     @DisplayName("include enum types")
     void includeEnums() {
-        CodeWriter generatedLines = generator.writer();
-        TypeUrl enumTypeUrl = TypeUrl.from(NullValue.getDescriptor());
+        var generatedLines = generator.writer();
+        var enumTypeUrl = TypeUrl.from(NullValue.getDescriptor());
         assertContains(generatedLines, enumTypeUrl.toString());
     }
 
     private static String expectedEntry(Descriptor message) {
-        TypeUrl typeUrl = TypeUrl.from(message);
-        TypeName typeName = TypeName.from(message);
+        var typeUrl = TypeUrl.from(message);
+        var typeName = TypeName.from(message);
         return "['" + typeUrl + "', " + typeName + ']';
     }
 }

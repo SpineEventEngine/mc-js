@@ -29,9 +29,7 @@ package io.spine.tools.mc.js.gradle;
 import com.google.common.collect.ImmutableList;
 import io.spine.tools.fs.DirectoryPattern;
 import io.spine.tools.fs.ExternalModule;
-import io.spine.tools.fs.ExternalModules;
 import org.gradle.api.Project;
-import org.gradle.api.plugins.PluginManager;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,8 +37,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -61,7 +57,7 @@ class McJsOptionsTest {
         project = ProjectBuilder.builder()
                 .withProjectDir(tempDirPath.toFile())
                 .build();
-        PluginManager pluginManager = project.getPluginManager();
+        var pluginManager = project.getPluginManager();
         pluginManager.apply("java");
         pluginManager.apply(PLUGIN_ID);
 
@@ -72,22 +68,22 @@ class McJsOptionsTest {
     @Test
     @DisplayName("add custom modules to resolve")
     void setModulesToResolve() {
-        String moduleName = "foo-bar-module";
-        McJsOptions options = McJsOptions.in(project);
-        Map<String, List<String>> modules = options.modules;
-        List<String> customModules = ImmutableList.of(
+        var moduleName = "foo-bar-module";
+        var options = McJsOptions.in(project);
+        var modules = options.modules;
+        var customModules = ImmutableList.of(
                 "foo",
                 "bar",
                 "baz"
         );
         modules.put(moduleName, customModules);
 
-        ExternalModules combinedModules = options.combinedModules();
+        var combinedModules = options.combinedModules();
 
-        List<DirectoryPattern> patterns = customModules.stream()
+        var patterns = customModules.stream()
                 .map(DirectoryPattern::of)
                 .collect(Collectors.toList());
-        ExternalModule expected = new ExternalModule(moduleName, patterns);
+        var expected = new ExternalModule(moduleName, patterns);
         assertThat(combinedModules.asList())
                 .contains(expected);
     }

@@ -28,8 +28,8 @@ package io.spine.tools.mc.js.code.field;
 
 import com.google.common.testing.NullPointerTester;
 import com.google.protobuf.Descriptors.FieldDescriptor;
-import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.testing.UtilityClassTest;
+import io.spine.tools.mc.js.code.CodeWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,26 +61,26 @@ class FieldGeneratorsTest extends UtilityClassTest<FieldGenerators> {
     @Test
     @DisplayName("create singular field generator for ordinary Protobuf field")
     void createForSingular() {
-        FieldGenerator generator = generatorFor(messageField());
+        var generator = generatorFor(messageField());
         assertThat(generator).isInstanceOf(SingularFieldGenerator.class);
     }
 
     @Test
     @DisplayName("create repeated field generator for repeated Protobuf field")
     void createForRepeated() {
-        FieldGenerator generator = generatorFor(repeatedField());
+        var generator = generatorFor(repeatedField());
         assertThat(generator).isInstanceOf(RepeatedFieldGenerator.class);
     }
 
     @Test
     @DisplayName("create map field generator for map Protobuf field")
     void createForMap() {
-        FieldGenerator generator = generatorFor(mapField());
+        var generator = generatorFor(mapField());
         assertThat(generator).isInstanceOf(MapFieldGenerator.class);
     }
 
     private FieldGenerator generatorFor(FieldDescriptor field) {
-        FieldToParse fieldToParse = fieldToParse(field);
+        var fieldToParse = fieldToParse(field);
         return FieldGenerators.createFor(fieldToParse, jsOutput);
     }
 
