@@ -32,9 +32,7 @@ import io.spine.internal.gradle.applyStandard
 plugins {
     java
     @Suppress("RemoveRedundantQualifierName") // Cannot use imports here.
-    with(io.spine.internal.dependency.Protobuf.GradlePlugin) {
-        id(id)
-    }
+    id(io.spine.internal.dependency.Protobuf.GradlePlugin.id)
 }
 
 // NOTE: this file is copied from the root project in the test setup.
