@@ -53,10 +53,10 @@ public final class GivenProject {
     }
 
     public FileSet mainFileSet() {
-        var mainDescriptorsDir =
-                project().buildRoot()
-                         .descriptors()
-                         .forSourceSet(SourceSetName.main.toString());
+        var mainDescriptorsDir = project()
+                .buildRoot()
+                .descriptors()
+                .forSourceSet(SourceSetName.main.toString());
         var descriptorSetFile = mainDescriptorsDir.resolve(KNOWN_TYPES);
         return FileSet.parse(descriptorSetFile.toFile());
     }
