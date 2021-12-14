@@ -43,9 +43,8 @@ class MethodTest {
     @DisplayName("assemble an empty no args method")
     void emptyNoArgs() {
         var method = newMethod().build();
-        var expectedRepresentation = expectedNoArgsDeclaration() + NL
-                + "};";
-        assertThat(method).isEqualTo(expectedRepresentation);
+        var expected = expectedNoArgsDeclaration() + NL + "};";
+        assertThat(method).isEqualTo(expected);
     }
 
     @Test
@@ -55,9 +54,8 @@ class MethodTest {
         var method = newMethod()
                 .withParameters(argument)
                 .build();
-        var expectedRepresentation = methodReference() + " = function(methodArgument) {" + NL
-                + "};";
-        assertThat(method).isEqualTo(expectedRepresentation);
+        var expected = methodReference() + " = function(methodArgument) {" + NL + "};";
+        assertThat(method).isEqualTo(expected);
     }
 
     @Test
@@ -67,11 +65,11 @@ class MethodTest {
                 .appendToBody("statement1;")
                 .appendToBody("statement2;")
                 .build();
-        var expectedRepresentation = expectedNoArgsDeclaration() + NL
+        var expected = expectedNoArgsDeclaration() + NL
                 + "  statement1;" + NL
                 + "  statement2;" + NL
                 + "};";
-        assertThat(method).isEqualTo(expectedRepresentation);
+        assertThat(method).isEqualTo(expected);
     }
 
     private static String expectedNoArgsDeclaration() {
