@@ -26,6 +26,7 @@
 
 package io.spine.tools.mc.js.fs;
 
+import com.google.common.truth.Truth8;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -35,22 +36,19 @@ import java.nio.file.Paths;
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.mc.js.fs.Given.importWithPath;
 import static io.spine.tools.mc.js.fs.Given.relativeImportPath;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`ImportStatement` should")
 class ImportStatementTest {
 
-    private final File importOrigin =
-            Paths.get("folder/nested/some-file.js")
-                 .toFile();
-    private final ImportStatement statement =
-            importWithPath(relativeImportPath(), importOrigin);
+    private final File importOrigin = Paths.get("folder/nested/some-file.js").toFile();
+    private final ImportStatement statement = importWithPath(relativeImportPath(), importOrigin);
 
     @Test
     @DisplayName("extract the import path")
     void extractImportPath() {
         var fileReference = statement.fileRef();
-        assertThat(fileReference.value()).isEqualTo(relativeImportPath());
+        assertThat(fileReference.value())
+                .isEqualTo(relativeImportPath());
     }
 
     @Test
@@ -59,19 +57,17 @@ class ImportStatementTest {
         var newPath = "b";
         var updatedStatement = statement.replaceRef(newPath);
         var updatedPath = updatedStatement.fileRef();
-        assertThat(updatedPath.value()).isEqualTo(newPath);
+        assertThat(updatedPath.value())
+                .isEqualTo(newPath);
     }
 
     @Test
     @DisplayName("know about the absolute path to the imported file")
     void obtainImportedFilePath() {
         var importedFilePath = statement.importedFilePath();
-        var expectedRoot =
-                importOrigin.getParentFile()
-                            .toPath();
-        var expectedPath =
-                expectedRoot.resolve(relativeImportPath())
-                            .normalize();
-        assertEquals(expectedPath, importedFilePath);
+        var expectedRoot = importOrigin.getParentFile().toPath();
+        var expectedPath = expectedRoot.resolve(relativeImportPath()).normalize();
+        Truth8.assertThat(importedFilePath)
+             .isEqualTo(expectedPath);
     }
 }
