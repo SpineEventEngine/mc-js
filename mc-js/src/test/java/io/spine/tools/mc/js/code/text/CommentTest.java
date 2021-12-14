@@ -37,16 +37,16 @@ class CommentTest {
 
     @Test
     @DisplayName("be prepended with slashes")
-    void predendedWithSlashes() {
-        String text = "It is a comment text.";
-        Comment comment = Comment.of(text);
+    void prependedWithSlashes() {
+        var text = "It is a comment text.";
+        var comment = Comment.of(text);
         assertEquals("// " + text, comment.text());
     }
 
     @Test
     @DisplayName("provide the comment about generation")
     void generatedByComment() {
-        Comment generatedBy = Comment.generatedBySpine();
+        var generatedBy = Comment.generatedBySpine();
         assertEquals("// " + MC_JS_SIGNATURE, generatedBy.text());
     }
 }

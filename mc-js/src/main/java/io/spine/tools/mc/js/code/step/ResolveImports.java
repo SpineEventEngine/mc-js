@@ -27,12 +27,13 @@
 package io.spine.tools.mc.js.code.step;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.FileSet;
 import io.spine.logging.Logging;
+import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.ExternalModules;
-import io.spine.tools.js.fs.Directory;
+import io.spine.tools.fs.Generated;
 import io.spine.tools.js.fs.FileName;
+import io.spine.tools.js.fs.JsFiles;
 import io.spine.tools.mc.js.fs.JsFile;
 
 import java.nio.file.Path;
@@ -49,26 +50,29 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public final class ResolveImports extends CodeGenStep implements Logging {
 
+    private final Path generatedRoot;
     private final ExternalModules modules;
 
-    public ResolveImports(Directory generatedRoot, ExternalModules modules) {
-        super(generatedRoot);
+    public ResolveImports(Generated generatedRoot, SourceSetName ssn, ExternalModules modules) {
+        super(generatedRoot.dir(ssn));
+        this.generatedRoot = generatedRoot.path();
         this.modules = checkNotNull(modules);
     }
 
     @Override
     protected void generateFor(FileSet fileSet) {
-        for (FileDescriptor file : fileSet.files()) {
-            FileName fileName = FileName.from(file);
+        var jsCodeRoot = jsCodeRoot();
+        for (var file : fileSet.files()) {
+            var fileName = FileName.from(file);
             _debug().log("Resolving imports in the file `%s`.", fileName);
-            Path filePath = generatedRoot().resolve(fileName);
+            var filePath = JsFiles.resolve(jsCodeRoot, fileName);
             resolveInFile(filePath);
         }
     }
 
     @VisibleForTesting
     void resolveInFile(Path filePath) {
-        JsFile file = new JsFile(filePath);
-        file.resolveImports(generatedRoot().path(), modules);
+        var file = new JsFile(filePath);
+        file.resolveImports(generatedRoot, modules);
     }
 }

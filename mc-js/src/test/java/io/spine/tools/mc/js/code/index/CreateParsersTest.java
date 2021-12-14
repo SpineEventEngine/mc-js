@@ -30,18 +30,20 @@ import com.google.common.testing.NullPointerTester;
 import com.google.protobuf.Any;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.js.fs.Directory;
-import io.spine.tools.js.fs.FileName;
-import io.spine.tools.js.code.TypeName;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
 import io.spine.js.generate.TaskId;
-import io.spine.tools.mc.js.code.given.GivenProject;
-import io.spine.tools.mc.js.code.CodeWriter;
-import io.spine.tools.mc.js.code.text.Import;
 import io.spine.option.OptionsProto;
+import io.spine.tools.code.SourceSetName;
+import io.spine.tools.fs.SourceDir;
+import io.spine.tools.js.code.TypeName;
+import io.spine.tools.js.fs.FileName;
+import io.spine.tools.js.fs.JsFiles;
+import io.spine.tools.mc.js.code.CodeWriter;
+import io.spine.tools.mc.js.code.given.GivenProject;
 import io.spine.tools.mc.js.code.text.Comment;
+import io.spine.tools.mc.js.code.text.Import;
 import io.spine.type.MessageType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -53,13 +55,13 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
+import static io.spine.testing.DisplayNames.NOT_ACCEPT_NULLS;
 import static io.spine.tools.mc.js.code.given.FileWriters.assertFileContains;
 import static io.spine.tools.mc.js.code.given.Generators.assertContains;
-import static io.spine.tools.mc.js.code.text.Parser.OBJECT_PARSER_IMPORT_NAME;
 import static io.spine.tools.mc.js.code.text.Parser.OBJECT_PARSER_FILE;
+import static io.spine.tools.mc.js.code.text.Parser.OBJECT_PARSER_IMPORT_NAME;
 import static io.spine.tools.mc.js.code.text.Parser.TYPE_PARSERS_FILE;
 import static io.spine.tools.mc.js.code.text.Parser.TYPE_PARSERS_IMPORT_NAME;
-import static io.spine.testing.DisplayNames.NOT_ACCEPT_NULLS;
 
 @DisplayName("`CreateParsers` should")
 class CreateParsersTest {
@@ -67,7 +69,7 @@ class CreateParsersTest {
     private static final FileDescriptor file = TaskId.getDescriptor().getFile();
     
     private static FileSet fileSet = null;
-    private static Directory generatedProtoDir = null;
+    private static SourceDir generatedProtoDir = null;
     private static CreateParsers writer = null;
 
     @BeforeAll
@@ -75,13 +77,13 @@ class CreateParsersTest {
         GivenProject project = GivenProject.serving(CreateParsersTest.class);
         fileSet = project.mainFileSet();
         generatedProtoDir = project.generatedMainJsSources();
-        writer = new CreateParsers(generatedProtoDir);
+        writer = new CreateParsers(project.generated().dir(SourceSetName.main));
     }
 
     @Test
     @DisplayName(NOT_ACCEPT_NULLS)
     void passNullToleranceCheck() {
-        new NullPointerTester().setDefault(Directory.class, generatedProtoDir)
+        new NullPointerTester().setDefault(SourceDir.class, generatedProtoDir)
                                .setDefault(FileSet.class, fileSet)
                                .testAllPublicStaticMethods(CreateParsers.class);
     }
@@ -147,7 +149,7 @@ class CreateParsersTest {
     }
 
     private static void checkParseCodeAdded(FileDescriptor file) throws IOException {
-        Path jsFilePath = generatedProtoDir.resolve(FileName.from(file));
+        Path jsFilePath = JsFiles.resolve(generatedProtoDir, FileName.from(file));
         for (MessageType messageType : TypeSet.onlyMessages(file)) {
             TypeName parserTypeName = TypeName.ofParser(messageType.descriptor());
             assertFileContains(jsFilePath, parserTypeName.value());

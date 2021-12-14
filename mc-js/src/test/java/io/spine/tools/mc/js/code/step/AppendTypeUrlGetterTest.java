@@ -26,11 +26,9 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import com.google.common.truth.StringSubject;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import com.google.protobuf.Descriptors.ServiceDescriptor;
 import io.spine.js.generate.TaskCount;
 import io.spine.js.generate.TaskServiceProto;
 import io.spine.js.generate.typeurl.OuterMessage;
@@ -38,7 +36,6 @@ import io.spine.js.generate.typeurl.OuterMessage.NestedEnum;
 import io.spine.js.generate.typeurl.OuterMessage.NestedMessage;
 import io.spine.js.generate.typeurl.TopLevelEnum;
 import io.spine.tools.mc.js.code.CodeWriter;
-import io.spine.tools.mc.js.code.text.Method;
 import io.spine.type.MessageType;
 import io.spine.type.ServiceType;
 import io.spine.type.Type;
@@ -111,16 +108,16 @@ class AppendTypeUrlGetterTest {
         @Test
         @DisplayName("for a message class")
         void forMessageClass() {
-            Method method = typeUrlMethod(messageType());
-            CodeWriter codeLines = method.writer();
+            var method = typeUrlMethod(messageType());
+            var codeLines = method.writer();
             checkMethodForTypePresent(codeLines, messageType());
         }
 
         @Test
         @DisplayName("for an enum class")
         void forEnumClass() {
-            Method method = typeUrlMethod(enumType());
-            CodeWriter codeLines = method.writer();
+            var method = typeUrlMethod(enumType());
+            var codeLines = method.writer();
             checkMethodForTypePresent(codeLines, enumType());
         }
     }
@@ -128,41 +125,41 @@ class AppendTypeUrlGetterTest {
     @Test
     @DisplayName("skip service definitions")
     void skipServiceDefinitions() {
-        FileDescriptor file = TaskServiceProto.getDescriptor();
-        ServiceDescriptor service = file.findServiceByName("TaskService");
-        CodeWriter output = typeUrlMethods(file);
+        var file = TaskServiceProto.getDescriptor();
+        var service = file.findServiceByName("TaskService");
+        var output = typeUrlMethods(file);
 
-        ServiceType serviceType = ServiceType.of(service);
+        var serviceType = ServiceType.of(service);
         checkMethodForTypeNotPresent(output, serviceType);
 
-        MessageType messageType = new MessageType(TaskCount.getDescriptor());
+        var messageType = new MessageType(TaskCount.getDescriptor());
         checkMethodForTypePresent(output, messageType);
     }
 
     private static void checkMethodForTypePresent(CodeWriter codeLines, Type<?, ?> type) {
-        String methodDeclaration = methodDeclaration(type);
-        String returnStatement = format("return '%s';", type.url());
-        String endOfMethod = "};";
-        String code = codeLines.toString();
-        StringSubject assertCode = assertThat(code);
+        var methodDeclaration = methodDeclaration(type);
+        var returnStatement = format("return '%s';", type.url());
+        var endOfMethod = "};";
+        var code = codeLines.toString();
+        var assertCode = assertThat(code);
         assertCode.contains(methodDeclaration);
         assertCode.contains(returnStatement);
         assertCode.contains(endOfMethod);
     }
 
     private static void checkMethodForTypeNotPresent(CodeWriter codeLines, Type<?, ?> type) {
-        String declaration = methodDeclaration(type);
-        String code = codeLines.toString();
+        var declaration = methodDeclaration(type);
+        var code = codeLines.toString();
         assertThat(code).doesNotContain(declaration);
     }
 
     private static String methodDeclaration(Type<?, ?> type) {
-        String result = format("proto.%s.typeUrl = function() {", type.name());
+        var result = format("proto.%s.typeUrl = function() {", type.name());
         return result;
     }
 
     private void assertHasTypeUrl(TypeUrl typeUrl) {
-        CodeWriter out = AppendTypeUrlGetter.typeUrlMethods(file);
+        var out = AppendTypeUrlGetter.typeUrlMethods(file);
         assertThat(out.toString()).contains(typeUrl.value());
     }
 }

@@ -26,9 +26,8 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import io.spine.tools.js.fs.Directory;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
-import io.spine.code.proto.ProtoBelongsToModule;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,10 +39,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class CodeGenStep {
 
-    private final Directory generatedRoot;
+    private final SourceCodeDirectory sourceDir;
 
-    protected CodeGenStep(Directory generatedRoot) {
-        this.generatedRoot = checkNotNull(generatedRoot);
+    protected CodeGenStep(SourceCodeDirectory jsCodeRoot) {
+        this.sourceDir = checkNotNull(jsCodeRoot);
     }
 
     /**
@@ -54,7 +53,7 @@ public abstract class CodeGenStep {
      */
     public final void performFor(FileSet fileSet) {
         checkNotNull(fileSet);
-        FileSet filtered = filter(fileSet);
+        var filtered = filter(fileSet);
         if (hasFiles(filtered)) {
             generateFor(filtered);
         }
@@ -74,7 +73,7 @@ public abstract class CodeGenStep {
      * @return the files to perform the tasks for
      */
     protected FileSet filter(FileSet fileSet) {
-        ProtoBelongsToModule predicate = new CompiledProtoBelongsToModule(generatedRoot);
+        var predicate = new CompiledProtoBelongsToModule(sourceDir);
         return fileSet.filter(predicate.forDescriptor());
     }
 
@@ -84,10 +83,10 @@ public abstract class CodeGenStep {
     protected abstract void generateFor(FileSet fileSet);
 
     /**
-     * Obtains the root of the generated Protobuf sources.
+     * Obtains the root directory for the JavaScript sources generated from Protobuf types.
      */
-    protected Directory generatedRoot() {
-        return generatedRoot;
+    protected SourceCodeDirectory jsCodeRoot() {
+        return sourceDir;
     }
 
     /**
@@ -99,7 +98,7 @@ public abstract class CodeGenStep {
      * @return {@code true} if there are files to process and {@code false} otherwise
      */
     private boolean hasFiles(FileSet fileSet) {
-        boolean hasFilesToProcess = !fileSet.isEmpty() && generatedRoot.exists();
+        var hasFilesToProcess = !fileSet.isEmpty() && sourceDir.exists();
         return hasFilesToProcess;
     }
 }

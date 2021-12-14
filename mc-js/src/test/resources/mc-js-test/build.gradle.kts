@@ -32,9 +32,7 @@ import io.spine.internal.gradle.applyStandard
 plugins {
     java
     @Suppress("RemoveRedundantQualifierName") // Cannot use imports here.
-    with(io.spine.internal.dependency.Protobuf.GradlePlugin) {
-        id(id).version(version)
-    }
+    id(io.spine.internal.dependency.Protobuf.GradlePlugin.id)
 }
 
 // NOTE: this file is copied from the root project in the test setup.
@@ -83,12 +81,12 @@ tasks.build {
     dependsOn(compileProtoToJs)
 }
 
-val spineBaseVersion: String by extra
+val baseVersion: String by extra
 val protobufVersion: String = io.spine.internal.dependency.Protobuf.version
 
 dependencies {
     // Proto files coming from `base` are to be generated into JS.
-    protobuf("io.spine:spine-base:$spineBaseVersion:proto@jar")
+    protobuf("io.spine:spine-base:$baseVersion:proto@jar")
     
     // We want standard Google files to be used for imports.
     implementation("com.google.protobuf:protobuf-java:${protobufVersion}:sources@jar")

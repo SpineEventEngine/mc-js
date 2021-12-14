@@ -36,48 +36,53 @@ import static com.google.common.truth.Truth.assertThat;
 @DisplayName("A code generator should generate an import for")
 class ImportTest {
 
-    private final FileName anyFile = FileName.from(Any.getDescriptor()
-                                                      .getFile());
+    private final FileName anyFile = FileName.from(Any.getDescriptor().getFile());
 
     @Test
     @DisplayName("a file relative to a current directory")
     void fileRelativeToCurrentDir() {
-        Import importLine = Import.fileRelativeToRoot(anyFile);
-        String expected = "require('./google/protobuf/any_pb.js');";
-        assertThat(importLine.text()).isEqualTo(expected);
+        var importLine = Import.fileRelativeToRoot(anyFile);
+        var expected = "require('./google/protobuf/any_pb.js');";
+        assertThat(importLine.text())
+                .isEqualTo(expected);
     }
 
     @Test
     @DisplayName("a file relative to another file")
     void fileRelativeToAnotherFile() {
-        Import importLine = Import.fileRelativeTo(anyFile, anyFile);
-        String expected = "require('../../google/protobuf/any_pb.js');";
-        assertThat(importLine.text()).isEqualTo(expected);
+        var importLine = Import.fileRelativeTo(anyFile, anyFile);
+        var expected = "require('../../google/protobuf/any_pb.js');";
+        assertThat(importLine.text())
+                .isEqualTo(expected);
     }
 
     @Test
     @DisplayName("a library")
     void library() {
-        Import importLine = Import.library("someJsLib");
-        String expected = "require('someJsLib');";
-        assertThat(importLine.text()).isEqualTo(expected);
+        var importLine = Import.library("someJsLib");
+        var expected = "require('someJsLib');";
+        assertThat(importLine.text())
+                .isEqualTo(expected);
     }
 
     @Test
     @DisplayName("a default component")
     void defaultComponent() {
-        Import defaultImport = Import.library("someJsLib")
-                                     .toDefault();
-        String expected = "require('someJsLib').default;";
-        assertThat(defaultImport.text()).isEqualTo(expected);
-        assertThat(defaultImport.toDefault()).isEqualTo(defaultImport);
+        var defaultImport = Import.library("someJsLib")
+                                  .toDefault();
+        var expected = "require('someJsLib').default;";
+        assertThat(defaultImport.text())
+                .isEqualTo(expected);
+        assertThat(defaultImport.toDefault())
+                .isEqualTo(defaultImport);
     }
 
     @Test
     @DisplayName("a file with an alias")
     void named() {
-        Import importLine = Import.fileRelativeToRoot(anyFile);
-        String expected = "let alias = require('./google/protobuf/any_pb.js');";
-        assertThat(importLine.namedAs("alias")).isEqualTo(expected);
+        var importLine = Import.fileRelativeToRoot(anyFile);
+        var expected = "let alias = require('./google/protobuf/any_pb.js');";
+        assertThat(importLine.namedAs("alias"))
+                .isEqualTo(expected);
     }
 }

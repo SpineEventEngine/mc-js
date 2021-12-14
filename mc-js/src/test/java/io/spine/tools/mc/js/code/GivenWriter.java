@@ -35,7 +35,7 @@ final class GivenWriter {
     }
 
     static CodeWriter withSomeCodeIndentedAt(int depth) {
-        CodeWriter lines = withDepth(depth);
+        var lines = withDepth(depth);
         lines.append("{");
         lines.increaseDepth();
         lines.append("in the code block");
@@ -45,8 +45,8 @@ final class GivenWriter {
     }
 
     static CodeWriter withDepth(int depth) {
-        CodeWriter writer = new CodeWriter();
-        for (int i = 0; i < depth; i++) {
+        var writer = new CodeWriter();
+        for (var i = 0; i < depth; i++) {
             writer.increaseDepth();
         }
         return writer;
@@ -56,7 +56,7 @@ final class GivenWriter {
      * Obtains code lines with the specified first line.
      */
     static CodeWriter newCodeLines(String firstLine) {
-        CodeWriter writer = new CodeWriter();
+        var writer = new CodeWriter();
         writer.append(firstLine);
         return writer;
     }
@@ -65,7 +65,7 @@ final class GivenWriter {
      * Obtains code lines with the specified first line.
      */
     static CodeWriter newCodeLines(Indent indent, String firstLine) {
-        CodeWriter writer = new CodeWriter(indent);
+        var writer = new CodeWriter(indent);
         writer.append(firstLine);
         return writer;
     }

@@ -28,18 +28,18 @@ package io.spine.tools.mc.js.code.step;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.code.Line;
-import io.spine.tools.js.fs.Directory;
-import io.spine.tools.js.code.MethodReference;
-import io.spine.tools.js.code.TypeName;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
+import io.spine.tools.code.Line;
+import io.spine.tools.js.code.MethodReference;
+import io.spine.tools.js.code.TypeName;
 import io.spine.tools.mc.js.code.CodeWriter;
-import io.spine.tools.mc.js.code.text.Snippet;
-import io.spine.tools.mc.js.fs.FileWriter;
 import io.spine.tools.mc.js.code.text.Comment;
 import io.spine.tools.mc.js.code.text.Method;
 import io.spine.tools.mc.js.code.text.Return;
+import io.spine.tools.mc.js.code.text.Snippet;
+import io.spine.tools.mc.js.fs.FileWriter;
 import io.spine.type.Type;
 import io.spine.type.TypeUrl;
 
@@ -54,8 +54,8 @@ public class AppendTypeUrlGetter extends CodeGenStep {
 
     private static final String METHOD_NAME = "typeUrl";
 
-    public AppendTypeUrlGetter(Directory generatedRoot) {
-        super(generatedRoot);
+    public AppendTypeUrlGetter(SourceCodeDirectory jsCodeRoot) {
+        super(jsCodeRoot);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AppendTypeUrlGetter extends CodeGenStep {
 
     private void generateFor(FileDescriptor file) {
         CodeWriter typeUrlMethods = typeUrlMethods(file);
-        FileWriter writer = FileWriter.newInstance(generatedRoot(), file);
+        FileWriter writer = FileWriter.newInstance(jsCodeRoot(), file);
         writer.append(typeUrlMethods);
     }
 

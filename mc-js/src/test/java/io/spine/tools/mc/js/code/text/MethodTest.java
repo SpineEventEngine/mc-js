@@ -34,43 +34,42 @@ import org.junit.jupiter.api.Test;
 import static io.spine.tools.mc.js.code.given.GivenMethod.methodReference;
 import static java.lang.System.lineSeparator;
 
-@DisplayName("Method should")
+@DisplayName("`Method` should")
 class MethodTest {
+
+    private static final String NL = lineSeparator();
 
     @Test
     @DisplayName("assemble an empty no args method")
     void emptyNoArgs() {
-        Method method = newMethod().build();
-        String expectedRepresentation = expectedNoArgsDeclaration() + lineSeparator()
-                + "};";
-        assertThat(method).isEqualTo(expectedRepresentation);
+        var method = newMethod().build();
+        var expected = expectedNoArgsDeclaration() + NL + "};";
+        assertThat(method).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("assemble an empty method with arguments")
     void emptyWithArgs() {
-        String argument = "methodArgument";
-        Method method = newMethod()
+        var argument = "methodArgument";
+        var method = newMethod()
                 .withParameters(argument)
                 .build();
-        String expectedRepresentation = methodReference() + " = function(methodArgument) {"
-                + lineSeparator()
-                + "};";
-        assertThat(method).isEqualTo(expectedRepresentation);
+        var expected = methodReference() + " = function(methodArgument) {" + NL + "};";
+        assertThat(method).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("assemble a method with body")
     void nonEmpty() {
-        Method method = newMethod()
+        var method = newMethod()
                 .appendToBody("statement1;")
                 .appendToBody("statement2;")
                 .build();
-        String expectedRepresentation = expectedNoArgsDeclaration() + lineSeparator()
-                + "  statement1;" + lineSeparator()
-                + "  statement2;" + lineSeparator()
+        var expected = expectedNoArgsDeclaration() + NL
+                + "  statement1;" + NL
+                + "  statement2;" + NL
                 + "};";
-        assertThat(method).isEqualTo(expectedRepresentation);
+        assertThat(method).isEqualTo(expected);
     }
 
     private static String expectedNoArgsDeclaration() {
@@ -82,8 +81,8 @@ class MethodTest {
     }
 
     private static StringSubject assertThat(Method method) {
-        String rawMethod = method.writer()
-                                 .toString();
+        var rawMethod = method.writer()
+                              .toString();
         return Truth.assertThat(rawMethod);
     }
 }

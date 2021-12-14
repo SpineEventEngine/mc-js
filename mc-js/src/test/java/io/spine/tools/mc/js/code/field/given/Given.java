@@ -26,7 +26,7 @@
 
 package io.spine.tools.mc.js.code.field.given;
 
-import com.google.protobuf.Descriptors;
+import com.google.protobuf.Descriptors.FieldDescriptor;
 
 import static io.spine.tools.mc.js.code.field.given.FieldContainerEntry.ENUM_FIELD;
 import static io.spine.tools.mc.js.code.field.given.FieldContainerEntry.MAP_FIELD;
@@ -41,37 +41,37 @@ public class Given {
     private Given() {
     }
 
-    public static Descriptors.FieldDescriptor primitiveField() {
+    public static FieldDescriptor primitiveField() {
         return field(PRIMITIVE_FIELD);
     }
 
-    public static Descriptors.FieldDescriptor enumField() {
+    public static FieldDescriptor enumField() {
         return field(ENUM_FIELD);
     }
 
-    public static Descriptors.FieldDescriptor messageField() {
+    public static FieldDescriptor messageField() {
         return field(MESSAGE_FIELD);
     }
 
-    public static Descriptors.FieldDescriptor timestampField() {
+    public static FieldDescriptor timestampField() {
         return field(TIMESTAMP_FIELD);
     }
 
-    public static Descriptors.FieldDescriptor singularField() {
+    public static FieldDescriptor singularField() {
         return field(MESSAGE_FIELD);
     }
 
-    public static Descriptors.FieldDescriptor repeatedField() {
+    public static FieldDescriptor repeatedField() {
         return field(REPEATED_FIELD);
     }
 
-    public static Descriptors.FieldDescriptor mapField() {
+    public static FieldDescriptor mapField() {
         return field(MAP_FIELD);
     }
 
-    private static Descriptors.FieldDescriptor field(FieldContainerEntry entry) {
+    private static FieldDescriptor field(FieldContainerEntry entry) {
         String fieldName = entry.protoName();
-        Descriptors.FieldDescriptor field = io.spine.tools.mc.js.code.given.Given.message().findFieldByName(fieldName);
+        FieldDescriptor field = io.spine.tools.mc.js.code.given.Given.message().findFieldByName(fieldName);
         return field;
     }
 }

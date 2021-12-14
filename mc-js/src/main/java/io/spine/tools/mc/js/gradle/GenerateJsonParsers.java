@@ -27,12 +27,10 @@
 package io.spine.tools.mc.js.gradle;
 
 import com.google.common.collect.ImmutableList;
-import io.spine.code.proto.FileSet;
+import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.ExternalModules;
 import io.spine.tools.gradle.ProtoFiles;
-import io.spine.tools.gradle.SourceSetName;
 import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 import io.spine.tools.mc.js.code.index.CreateParsers;
 import io.spine.tools.mc.js.code.index.GenerateIndexFile;
 import io.spine.tools.mc.js.code.step.AppendTypeUrlGetter;
@@ -41,10 +39,6 @@ import io.spine.tools.mc.js.code.step.ResolveImports;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
-
-import java.nio.file.Path;
-import java.util.List;
-import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static io.spine.tools.gradle.project.Projects.getSourceSetNames;
@@ -81,38 +75,31 @@ final class GenerateJsonParsers implements Action<Task> {
 
     @Override
     public void execute(Task task) {
-        List<SourceSetName> sourceSetNames = getSourceSetNames(project);
-        for (SourceSetName ssn : sourceSetNames) {
+        var sourceSetNames = getSourceSetNames(project);
+        for (var ssn : sourceSetNames) {
             generateFor(ssn);
         }
     }
 
     private void generateFor(SourceSetName ssn) {
-        Supplier<FileSet> files = ProtoFiles.collect(project, ssn);
-        ImmutableList<CodeGenStep> steps = createSteps(ssn);
-        FileSet suppliedFiles = files.get();
+        var files = ProtoFiles.collect(project, ssn);
+        var steps = createSteps(ssn);
+        var suppliedFiles = files.get();
         for (CodeGenStep step : steps) {
             step.performFor(suppliedFiles);
         }
     }
 
     private ImmutableList<CodeGenStep> createSteps(SourceSetName ssn) {
-        Directory generatedRoot = generatedRootFor(ssn);
-        ImmutableList<CodeGenStep> steps = ImmutableList.of(
-                new CreateParsers(generatedRoot),
-                new AppendTypeUrlGetter(generatedRoot),
-                new GenerateIndexFile(generatedRoot),
-                new ResolveImports(generatedRoot, modules)
+        var jsPaths = DefaultJsPaths.at(project.getProjectDir());
+        var generated = jsPaths.generated();
+        var jsCodeRoot = generated.dir(ssn);
+        var steps = ImmutableList.of(
+                new CreateParsers(jsCodeRoot),
+                new AppendTypeUrlGetter(jsCodeRoot),
+                new GenerateIndexFile(jsCodeRoot),
+                new ResolveImports(generated, ssn, modules)
         );
         return steps;
-    }
-
-    private Directory generatedRootFor(SourceSetName ssn) {
-        DefaultJsPaths jsPaths = DefaultJsPaths.at(project.getProjectDir());
-        Path subDir = jsPaths.generated()
-                             .path()
-                             .resolve(ssn.getValue());
-        Directory generatedRoot = Directory.at(subDir);
-        return generatedRoot;
     }
 }

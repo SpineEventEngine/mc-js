@@ -29,24 +29,22 @@ package io.spine.tools.mc.js.code;
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.NullPointerTester;
 import com.google.common.truth.StringSubject;
-import io.spine.tools.code.Line;
 import io.spine.tools.code.Indent;
 import io.spine.tools.code.IndentedLine;
+import io.spine.tools.code.Line;
 import io.spine.tools.mc.js.code.text.Comment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static com.google.common.truth.Truth.assertThat;
-import static io.spine.tools.mc.js.code.given.Generators.assertContains;
 import static io.spine.testing.Assertions.assertIllegalArgument;
 import static io.spine.testing.DisplayNames.NOT_ACCEPT_NULLS;
 import static io.spine.tools.code.Indent.of2;
 import static io.spine.tools.code.Indent.of4;
 import static io.spine.tools.mc.js.code.CodeWriter.lineSeparator;
+import static io.spine.tools.mc.js.code.given.Generators.assertContains;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`CodeWriter` should")
@@ -77,11 +75,11 @@ class CodeWriterTest {
     @Test
     @DisplayName("support custom indent")
     void setIndent() {
-        Indent indent = Indent.of4();
-        CodeWriter jsOutput = new CodeWriter(indent);
+        var indent = Indent.of4();
+        var jsOutput = new CodeWriter(indent);
         jsOutput.increaseDepth();
         jsOutput.append(LINE);
-        String expected = indent.at(1) + LINE;
+        var expected = indent.at(1) + LINE;
         assertThat(jsOutput.toString())
                 .isEqualTo(expected);
     }
@@ -110,7 +108,7 @@ class CodeWriterTest {
     @DisplayName("declare function")
     void declareFunction() {
         jsOutput.enterMethod(METHOD_NAME, FUNCTION_ARG);
-        String declaration = METHOD_NAME + " = function(" + FUNCTION_ARG + ") {";
+        var declaration = METHOD_NAME + " = function(" + FUNCTION_ARG + ") {";
         assertContains(jsOutput, declaration);
         assertEquals(1, jsOutput.currentDepth());
     }
@@ -120,7 +118,7 @@ class CodeWriterTest {
     void exitFunction() {
         jsOutput.enterMethod(METHOD_NAME, FUNCTION_ARG);
         jsOutput.exitMethod();
-        String functionExit = "};";
+        var functionExit = "};";
         assertContains(jsOutput, functionExit);
         assertEquals(0, jsOutput.currentDepth());
     }
@@ -133,7 +131,7 @@ class CodeWriterTest {
         @DisplayName("if block")
         void enterIf() {
             jsOutput.enterIfBlock(CONDITION);
-            String ifDeclaration = "if (" + CONDITION + ") {";
+            var ifDeclaration = "if (" + CONDITION + ") {";
             assertContains(jsOutput, ifDeclaration);
             assertEquals(1, jsOutput.currentDepth());
         }
@@ -143,7 +141,7 @@ class CodeWriterTest {
         void enterElse() {
             jsOutput.enterIfBlock(CONDITION);
             jsOutput.enterElseBlock();
-            String elseDeclaration = "} else {";
+            var elseDeclaration = "} else {";
             assertContains(jsOutput, elseDeclaration);
             assertEquals(1, jsOutput.currentDepth());
         }
@@ -152,7 +150,7 @@ class CodeWriterTest {
         @DisplayName("custom block")
         void enterCustomBlock() {
             jsOutput.enterBlock(CUSTOM_BLOCK);
-            String blockDeclaration = CUSTOM_BLOCK + " {";
+            var blockDeclaration = CUSTOM_BLOCK + " {";
             assertContains(jsOutput, blockDeclaration);
             assertEquals(1, jsOutput.currentDepth());
         }
@@ -168,18 +166,18 @@ class CodeWriterTest {
         @Test
         @DisplayName("of the same depth")
         void sameDepth() {
-            CodeWriter first = GivenWriter.newCodeLines(FIRST_PART);
-            CodeWriter second = GivenWriter.newCodeLines(SECOND_PART);
+            var first = GivenWriter.newCodeLines(FIRST_PART);
+            var second = GivenWriter.newCodeLines(SECOND_PART);
             first.append(second);
-            String expected = FIRST_PART + lineSeparator() + SECOND_PART;
+            var expected = FIRST_PART + lineSeparator() + SECOND_PART;
             assertLines(first).isEqualTo(expected);
         }
 
         @Test
         @DisplayName("only of the same indent")
         void notAllowDifferentIndents() {
-            CodeWriter first = GivenWriter.newCodeLines(of2(), FIRST_PART);
-            CodeWriter second = GivenWriter.newCodeLines(of4(), FIRST_PART);
+            var first = GivenWriter.newCodeLines(of2(), FIRST_PART);
+            var second = GivenWriter.newCodeLines(of4(), FIRST_PART);
             assertIllegalArgument(() -> first.append(second));
         }
 
@@ -205,10 +203,10 @@ class CodeWriterTest {
          *         the depth of the appended lines
          */
         private void assertMergedAndAligned(int d1, int d2) {
-            CodeWriter first = GivenWriter.withDepth(d1);
-            CodeWriter second = GivenWriter.withSomeCodeIndentedAt(d2);
+            var first = GivenWriter.withDepth(d1);
+            var second = GivenWriter.withSomeCodeIndentedAt(d2);
             first.append(second);
-            CodeWriter expected = GivenWriter.withSomeCodeIndentedAt(d1);
+            var expected = GivenWriter.withSomeCodeIndentedAt(d1);
             assertThat(first).isEqualTo(expected);
         }
     }
@@ -216,20 +214,20 @@ class CodeWriterTest {
     @Test
     @DisplayName("append an unaligned line")
     void appendUnalignedLine() {
-        CodeWriter lines = new CodeWriter();
+        var lines = new CodeWriter();
         lines.increaseDepth();
         Line comment = Comment.of("The field...");
         lines.append(comment);
-        String expected = lines.indent() + comment.text();
+        var expected = lines.indent() + comment.text();
         assertLines(lines).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("append an indented line")
     void appendIndentedLine() {
-        CodeWriter lines = new CodeWriter();
-        Indent indent = Indent.of4().shiftedRight();
-        IndentedLine indentedLine = IndentedLine.of(indent, "some code line");
+        var lines = new CodeWriter();
+        var indent = Indent.of4().shiftedRight();
+        var indentedLine = IndentedLine.of(indent, "some code line");
         lines.append(indentedLine);
         assertLines(lines)
                 .isEqualTo(indentedLine.toString());
@@ -240,7 +238,7 @@ class CodeWriterTest {
     void exitBlock() {
         jsOutput.enterBlock(CUSTOM_BLOCK);
         jsOutput.exitBlock();
-        String blockExit = "}";
+        var blockExit = "}";
         assertContains(jsOutput, blockExit);
         assertEquals(0, jsOutput.currentDepth());
     }
@@ -248,14 +246,14 @@ class CodeWriterTest {
     @Test
     @DisplayName("join lines using comma")
     void joinLinesWithComma() {
-        Line first = Line.of("entry1");
-        Line second = Line.of("entry2");
-        Line last = Line.of("entry3");
-        List<Line> lines = ImmutableList.of(first, second, last);
+        var first = Line.of("entry1");
+        var second = Line.of("entry2");
+        var last = Line.of("entry3");
+        var lines = ImmutableList.of(first, second, last);
 
-        CodeWriter code = CodeWriter.commaSeparated(lines);
+        var code = CodeWriter.commaSeparated(lines);
 
-        StringSubject assertCode = assertLines(code);
+        var assertCode = assertLines(code);
         assertCode.contains(first + ",");
         assertCode.contains(second + ",");
         assertCode.contains(last.text());
@@ -265,11 +263,11 @@ class CodeWriterTest {
     @Test
     @DisplayName("concatenate all lines of code with correct indent in `toString`")
     void provideToString() {
-        CodeWriter jsOutput = GivenWriter.newCodeLines("line 1");
+        var jsOutput = GivenWriter.newCodeLines("line 1");
         jsOutput.increaseDepth();
         jsOutput.append("line 2");
-        String output = jsOutput.toString();
-        String expected = "line 1" + lineSeparator() + "  line 2";
+        var output = jsOutput.toString();
+        var expected = "line 1" + lineSeparator() + "  line 2";
         assertThat(output)
                 .isEqualTo(expected);
     }

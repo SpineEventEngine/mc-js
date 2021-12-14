@@ -30,10 +30,10 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Descriptors.FileDescriptor;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
-import io.spine.tools.js.fs.Directory;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.step.CodeGenStep;
@@ -55,8 +55,8 @@ import static io.spine.tools.mc.js.code.text.Parser.importTypeParsersIn;
  */
 public final class CreateParsers extends CodeGenStep {
 
-    public CreateParsers(Directory generatedRoot) {
-        super(checkNotNull(generatedRoot));
+    public CreateParsers(SourceCodeDirectory jsCodeRoot) {
+        super(checkNotNull(jsCodeRoot));
     }
 
     /**
@@ -85,7 +85,7 @@ public final class CreateParsers extends CodeGenStep {
             return;
         }
         CodeWriter code = codeFor(file);
-        FileWriter writer = FileWriter.newInstance(generatedRoot(), file);
+        FileWriter writer = FileWriter.newInstance(jsCodeRoot(), file);
         writer.append(code);
     }
 

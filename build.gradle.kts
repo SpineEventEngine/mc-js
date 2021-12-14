@@ -38,7 +38,6 @@ import io.spine.internal.dependency.JUnit
 import io.spine.internal.dependency.Protobuf
 import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.IncrementGuard
-import io.spine.internal.gradle.Scripts
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.applyGitHubPackages
 import io.spine.internal.gradle.applyStandard
@@ -66,7 +65,7 @@ plugins {
     `java-library`
     idea
     io.spine.internal.dependency.Protobuf.GradlePlugin.apply {
-        id(id).version(version)
+        id(id)
     }
     io.spine.internal.dependency.ErrorProne.GradlePlugin.apply {
         id(id)
@@ -114,7 +113,6 @@ subprojects {
 
     dependencies {
         errorprone(ErrorProne.core)
-        errorproneJavac(ErrorProne.javacPlugin)
 
         compileOnlyApi(FindBugs.annotations)
         compileOnlyApi(CheckerFramework.annotations)
@@ -128,7 +126,7 @@ subprojects {
         testRuntimeOnly(JUnit.runner)
     }
 
-    val spineBaseVersion: String by extra
+    val baseVersion: String by extra
     val toolBaseVersion: String by extra
     with(configurations) {
         forceVersions()
@@ -136,8 +134,8 @@ subprojects {
         all {
             resolutionStrategy {
                 force(
-                    "io.spine:spine-base:$spineBaseVersion",
-                    "io.spine.tools:spine-testlib:$spineBaseVersion",
+                    "io.spine:spine-base:$baseVersion",
+                    "io.spine.tools:spine-testlib:$baseVersion",
                     "io.spine.tools:spine-tool-base:$toolBaseVersion",
                     "io.spine.tools:spine-plugin-base:$toolBaseVersion"
                 )
@@ -153,16 +151,14 @@ subprojects {
     JavadocConfig.applyTo(project)
     CheckStyleConfig.applyTo(project)
 
-    @Suppress("MagicNumber") /* There isn't a reliable way of converting
-                                        `JavaVersion.VERSION_1_8` to `8`, or vice versa. */
-    val javaVersion = 8
+    val javaVersion = JavaVersion.VERSION_11.toString()
     kotlin {
         applyJvmToolchain(javaVersion)
         explicitApi()
     }
 
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+        kotlinOptions.jvmTarget = javaVersion
         setFreeCompilerArgs()
     }
 
@@ -187,7 +183,7 @@ subprojects {
 
         val versions = Properties()
         with(versions) {
-            setProperty("baseVersion", spineBaseVersion)
+            setProperty("baseVersion", baseVersion)
             setProperty("protobufVersion", Protobuf.version)
             setProperty("gRPCVersion", Grpc.version)
         }

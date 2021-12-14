@@ -26,54 +26,48 @@
 
 package io.spine.tools.mc.js.fs;
 
-import io.spine.tools.fs.FileReference;
+import com.google.common.truth.Truth8;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.tools.mc.js.fs.Given.importWithPath;
 import static io.spine.tools.mc.js.fs.Given.relativeImportPath;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("`ImportStatement` should")
 class ImportStatementTest {
 
-    private final File importOrigin =
-            Paths.get("folder/nested/some-file.js")
-                 .toFile();
-    private final ImportStatement statement =
-            importWithPath(relativeImportPath(), importOrigin);
+    private final File importOrigin = Paths.get("folder/nested/some-file.js").toFile();
+    private final ImportStatement statement = importWithPath(relativeImportPath(), importOrigin);
 
     @Test
     @DisplayName("extract the import path")
     void extractImportPath() {
-        FileReference fileReference = statement.fileRef();
-        assertThat(fileReference.value()).isEqualTo(relativeImportPath());
+        var fileReference = statement.fileRef();
+        assertThat(fileReference.value())
+                .isEqualTo(relativeImportPath());
     }
 
     @Test
     @DisplayName("replace the import path")
     void replaceImportPath() {
-        String newPath = "b";
-        ImportStatement updatedStatement = statement.replaceRef(newPath);
-        FileReference updatedPath = updatedStatement.fileRef();
-        assertThat(updatedPath.value()).isEqualTo(newPath);
+        var newPath = "b";
+        var updatedStatement = statement.replaceRef(newPath);
+        var updatedPath = updatedStatement.fileRef();
+        assertThat(updatedPath.value())
+                .isEqualTo(newPath);
     }
 
     @Test
     @DisplayName("know about the absolute path to the imported file")
     void obtainImportedFilePath() {
-        Path importedFilePath = statement.importedFilePath();
-        Path expectedRoot =
-                importOrigin.getParentFile()
-                            .toPath();
-        Path expectedPath =
-                expectedRoot.resolve(relativeImportPath())
-                            .normalize();
-        assertEquals(expectedPath, importedFilePath);
+        var importedFilePath = statement.importedFilePath();
+        var expectedRoot = importOrigin.getParentFile().toPath();
+        var expectedPath = expectedRoot.resolve(relativeImportPath()).normalize();
+        Truth8.assertThat(importedFilePath)
+             .isEqualTo(expectedPath);
     }
 }

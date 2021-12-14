@@ -104,7 +104,7 @@ class PrimitiveParserTest {
         void parseIdentically() {
             parser = PrimitiveTypeParser.createFor(INT32, writer);
             parser.parseIntoVariable(VALUE, VARIABLE);
-            String parse = "let " + VARIABLE + " = " + VALUE;
+            var parse = "let " + VARIABLE + " = " + VALUE;
             assertContains(writer, parse);
         }
 
@@ -113,7 +113,7 @@ class PrimitiveParserTest {
         void parseLong() {
             parser = PrimitiveTypeParser.createFor(INT64, writer);
             parser.parseIntoVariable(VALUE, VARIABLE);
-            String parse = "let " + VARIABLE + " = parseInt(" + VALUE + ')';
+            var parse = "let " + VARIABLE + " = parseInt(" + VALUE + ')';
             assertContains(writer, parse);
         }
 
@@ -122,7 +122,7 @@ class PrimitiveParserTest {
         void parseFloat() {
             parser = PrimitiveTypeParser.createFor(FLOAT, writer);
             parser.parseIntoVariable(VALUE, VARIABLE);
-            String parse = "let " + VARIABLE + " = parseFloat(" + VALUE + ')';
+            var parse = "let " + VARIABLE + " = parseFloat(" + VALUE + ')';
             assertContains(writer, parse);
         }
 
@@ -131,9 +131,9 @@ class PrimitiveParserTest {
         void parseBytes() {
             parser = PrimitiveTypeParser.createFor(BYTES, writer);
             parser.parseIntoVariable(VALUE, VARIABLE);
-            String base64Import = "let " + BASE64_VAR + " = require('" + BASE64_LIB + "');";
+            var base64Import = "let " + BASE64_VAR + " = require('" + BASE64_LIB + "');";
             assertContains(writer, base64Import);
-            String parse = "let " + VARIABLE + " = " + BASE64_VAR + ".toByteArray(" + VALUE + ')';
+            var parse = "let " + VARIABLE + " = " + BASE64_VAR + ".toByteArray(" + VALUE + ')';
             assertContains(writer, parse);
         }
     }

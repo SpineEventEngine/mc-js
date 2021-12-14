@@ -28,13 +28,12 @@ package io.spine.tools.mc.js.code.given;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.spine.code.proto.FileSet;
-import io.spine.tools.gradle.SourceSetName;
+import io.spine.tools.code.SourceSetName;
+import io.spine.tools.fs.SourceDir;
 import io.spine.tools.gradle.testing.GradleProject;
 import io.spine.tools.js.fs.DefaultJsPaths;
-import io.spine.tools.js.fs.Directory;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import static io.spine.code.proto.FileDescriptors.KNOWN_TYPES;
 import static io.spine.testing.TempDir.forClass;
@@ -54,22 +53,25 @@ public final class GivenProject {
     }
 
     public FileSet mainFileSet() {
-        Path mainDescriptorsDir =
-                project().buildRoot()
-                         .descriptors()
-                         .forSourceSet(SourceSetName.main.toString());
-        Path descriptorSetFile = mainDescriptorsDir.resolve(KNOWN_TYPES);
+        var mainDescriptorsDir = project()
+                .buildRoot()
+                .descriptors()
+                .forSourceSet(SourceSetName.main.toString());
+        var descriptorSetFile = mainDescriptorsDir.resolve(KNOWN_TYPES);
         return FileSet.parse(descriptorSetFile.toFile());
     }
 
-    public Directory generatedMainJsSources() {
-        return project().generated()
-                        .mainJs();
+    public SourceDir generatedMainJsSources() {
+        return generated().dir(SourceSetName.main);
+    }
+
+    public DefaultJsPaths.GeneratedJs generated() {
+        return project().generated();
     }
 
     private DefaultJsPaths project() {
         compiled();
-        DefaultJsPaths project = DefaultJsPaths.at(projectDir);
+        var project = DefaultJsPaths.at(projectDir);
         return project;
     }
 
@@ -83,7 +85,7 @@ public final class GivenProject {
     }
 
     private void compile() {
-        GradleProject gradleProject = GradleProject.setupAt(projectDir)
+        var gradleProject = GradleProject.setupAt(projectDir)
                 .fromResources("mc-js-test")
                 .copyBuildSrc()
                 .create();

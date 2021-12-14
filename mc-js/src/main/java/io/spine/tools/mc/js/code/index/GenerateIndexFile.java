@@ -27,18 +27,14 @@
 package io.spine.tools.mc.js.code.index;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.protobuf.Descriptors.FileDescriptor;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
-import io.spine.tools.js.fs.Directory;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.step.CodeGenStep;
 import io.spine.tools.mc.js.code.text.Import;
 import io.spine.tools.mc.js.fs.FileWriter;
-
-import java.util.Collection;
-import java.util.Set;
 
 import static io.spine.tools.code.Line.emptyLine;
 import static io.spine.tools.js.fs.LibraryFile.INDEX;
@@ -57,20 +53,20 @@ import static java.util.stream.Collectors.toSet;
  */
 public final class GenerateIndexFile extends CodeGenStep {
 
-    public GenerateIndexFile(Directory generatedRoot) {
-        super(generatedRoot);
+    public GenerateIndexFile(SourceCodeDirectory jsCodeRoot) {
+        super(jsCodeRoot);
     }
 
     @Override
     protected void generateFor(FileSet fileSet) {
-        CodeWriter code = codeFor(fileSet);
-        FileWriter writer = FileWriter.newInstance(generatedRoot(), INDEX);
+        var code = codeFor(fileSet);
+        var writer = FileWriter.newInstance(jsCodeRoot(), INDEX.fileName());
         writer.write(code);
     }
 
     @VisibleForTesting
     static CodeWriter codeFor(FileSet fileSet) {
-        CodeWriter code = new CodeWriter();
+        var code = new CodeWriter();
         code.append(knownTypesImports(fileSet));
         code.append(emptyLine());
         code.append(new KnownTypes(fileSet).writer());
@@ -83,15 +79,14 @@ public final class GenerateIndexFile extends CodeGenStep {
      * Generates import statements for all files declaring generated messages.
      */
     private static CodeWriter knownTypesImports(FileSet fileSet) {
-        Collection<FileDescriptor> files = fileSet.files();
-        Set<FileName> imports =
-                files.stream()
-                     .filter(file -> !TypeSet.from(file).isEmpty())
-                     .map(FileName::from)
-                     .collect(toSet());
-        CodeWriter importLines = new CodeWriter();
-        for (FileName fileName : imports) {
-            Import fileImport = Import.fileRelativeToRoot(fileName);
+        var files = fileSet.files();
+        var imports = files.stream()
+                .filter(file -> !TypeSet.from(file).isEmpty())
+                .map(FileName::from)
+                .collect(toSet());
+        var importLines = new CodeWriter();
+        for (var fileName : imports) {
+            var fileImport = Import.fileRelativeToRoot(fileName);
             importLines.append(fileImport);
         }
         return importLines;

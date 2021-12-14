@@ -27,10 +27,10 @@
 package io.spine.tools.mc.js.code.step;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.js.fs.Directory;
+import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.mc.js.code.given.GivenProject;
 import io.spine.tools.mc.js.code.given.TestCodeGenStep;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,9 +41,9 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 
 import static com.google.common.truth.Truth.assertThat;
+import static io.spine.tools.code.SourceSetName.main;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,21 +53,21 @@ class CodeGenStepTest {
 
     private static final String MISSING_PATH = "non-existent";
 
-    private static Directory generatedProtoDir = null;
+    private static SourceCodeDirectory generatedJsDir = null;
     private static FileSet mainFileSet = null;
 
     private TestCodeGenStep task;
 
     @BeforeAll
     static void compileProject() {
-        GivenProject project = GivenProject.serving(CodeGenStepTest.class);
-        generatedProtoDir = project.generatedMainJsSources();
+        var project = GivenProject.serving(CodeGenStepTest.class);
+        generatedJsDir = project.generated().dir(main);
         mainFileSet = project.mainFileSet();
     }
 
     @BeforeEach
     void createTask() {
-        task = new TestCodeGenStep(generatedProtoDir);
+        task = new TestCodeGenStep(generatedJsDir);
     }
 
     @Test
@@ -79,26 +79,29 @@ class CodeGenStepTest {
     @Test
     @DisplayName("recognize there are no generated files to process")
     void recognizeThereAreNoFiles() {
-        Directory nonExistentRoot = Directory.at(Paths.get(MISSING_PATH));
-        TestCodeGenStep task = new TestCodeGenStep(nonExistentRoot);
+        var nonExistentRoot =
+                DefaultJsPaths.at(Paths.get(MISSING_PATH))
+                              .generated()
+                              .dir(main);
+        var task = new TestCodeGenStep(nonExistentRoot);
         assertNotPerformed(task, mainFileSet);
     }
 
     @Test
     @DisplayName("recognize there are no known types to process")
     void recognizeThereAreNoTypes() {
-        FileSet emptyFileSet = FileSet.of(ImmutableSet.of());
+        var emptyFileSet = FileSet.of(ImmutableSet.of());
         assertNotPerformed(task, emptyFileSet);
     }
 
     @Test
     @DisplayName("process files compiled to JavaScript")
     void processCompiledJsFiles() {
-        FileSet passedFiles = mainFileSet;
+        var passedFiles = mainFileSet;
         task.performFor(passedFiles);
-        FileSet processedFiles = task.processedFileSet();
+        var processedFiles = task.processedFileSet();
         // It is expected that standard Protobuf types won't be generated (see test build script).
-        Collection<FileDescriptor> expectedFilteredFiles = passedFiles
+        var expectedFilteredFiles = passedFiles
                 .filter(FileDescriptors::isGoogle)
                 .files();
         int expectedProcessedFiles = passedFiles.size() - expectedFilteredFiles.size();
@@ -108,9 +111,9 @@ class CodeGenStepTest {
     @Test
     @DisplayName("skip files not compiled to JavaScript")
     void skipNotCompiledJsFiles(@TempDir Path tempDir) {
-        Directory emptyDirectory = Directory.at(tempDir);
-        TestCodeGenStep task = new TestCodeGenStep(emptyDirectory);
-        FileSet passedFiles = mainFileSet;
+        var emptyDirectory = DefaultJsPaths.at(tempDir).generated().dir(main);
+        var task = new TestCodeGenStep(emptyDirectory);
+        var passedFiles = mainFileSet;
         // Check the file set is originally not empty.
         assertFalse(passedFiles.isEmpty());
         // Check all passed files were filtered out since they were not compiled to JS.
