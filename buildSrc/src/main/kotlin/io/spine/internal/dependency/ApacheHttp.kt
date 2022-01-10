@@ -24,34 +24,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.tools.mc.js.code.text;
+package io.spine.internal.dependency
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+@Suppress("unused")
+object ApacheHttp {
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-@DisplayName("`Return` should generate")
-class ReturnTest {
-
-    @Test
-    @DisplayName("an object")
-    void object() {
-        var line = Return.value(5);
-        assertEquals("return 5;", line.text());
-    }
-
-    @Test
-    @DisplayName("a string literal")
-    void stringLiteral() {
-        var line = Return.stringLiteral("foo");
-        assertEquals("return 'foo';", line.text());
-    }
-
-    @Test
-    @DisplayName("`null` reference")
-    void nullValue() {
-        var nullValue = Return.nullReference();
-        assertEquals("return null;", nullValue.text());
-    }
+    // https://hc.apache.org/downloads.cgi
+    const val core = "org.apache.httpcomponents:httpcore:4.4.14"
 }
