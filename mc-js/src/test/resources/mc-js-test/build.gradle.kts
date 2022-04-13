@@ -48,8 +48,10 @@ repositories {
     applyStandard()
 }
 
-tasks.compileJava { enabled = false }
-tasks.compileTestJava { enabled = false }
+tasks {
+    compileJava { enabled = false }
+    compileTestJava { enabled = false }
+}
 
 val compileProtoToJs by tasks.registering
 
