@@ -79,10 +79,10 @@ spinePublishing {
 
 allprojects {
     apply {
-        from("$rootDir/version.gradle.kts")
         plugin("jacoco")
         plugin("idea")
         plugin("project-report")
+        from("$rootDir/version.gradle.kts")
     }
 
     group = "io.spine.tools"
@@ -190,11 +190,9 @@ subprojects {
             createParentDirs(propertiesFile)
             propertiesFile.createNewFile()
             propertiesFile.outputStream().use {
-                versions.store(
-                    it,
+                versions.store(it,
                     "Versions of dependencies of the Spine Model Compiler for Java plugin and" +
-                            " the Spine Protoc plugin."
-                )
+                            " the Spine Protoc plugin.")
             }
         }
     }
