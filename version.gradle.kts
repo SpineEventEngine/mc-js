@@ -25,11 +25,8 @@
  */
 
 /**
- * `baseVersion` is also used in the tests.
- * See `mc-js/src/test/resources/mc-js-test/build.gradle.kts`.
+ * The version of this library.
+ *
+ * For versions of Spine-based dependencies, please see [io.spine.internal.dependency.Spine].
  */
-val baseVersion by extra("2.0.0-SNAPSHOT.88")
-val toolBaseVersion by extra("2.0.0-SNAPSHOT.88")
-val mcVersion by extra("2.0.0-SNAPSHOT.89")
-
 val versionToPublish by extra("2.0.0-SNAPSHOT.89")

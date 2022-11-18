@@ -26,6 +26,7 @@
 
 import com.google.protobuf.gradle.*
 import io.spine.internal.dependency.Protobuf
+import io.spine.internal.dependency.Spine
 import io.spine.internal.gradle.standardToSpineSdk
 
 plugins {
@@ -76,12 +77,9 @@ tasks.build {
     dependsOn(compileProtoToJs)
 }
 
-apply(from = "$enclosingRootDir/version.gradle.kts")
-val baseVersion: String by extra
-
 dependencies {
     // Proto files coming from `base` are to be generated into JS.
-    protobuf("io.spine:spine-base:$baseVersion:proto@jar")
+    protobuf("io.spine:spine-base:${Spine.DefaultVersion.base}:proto@jar")
     
     // We want standard Google files to be used for imports.
     implementation("com.google.protobuf:protobuf-java:${Protobuf.version}:sources@jar")
