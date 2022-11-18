@@ -26,26 +26,20 @@
 
 import com.google.protobuf.gradle.*
 import io.spine.internal.dependency.Protobuf
-import io.spine.internal.gradle.applyGitHubPackages
-import io.spine.internal.gradle.applyStandard
+import io.spine.internal.dependency.Spine
+import io.spine.internal.gradle.standardToSpineSdk
 
 plugins {
     java
-    @Suppress("RemoveRedundantQualifierName") // Cannot use imports here.
-    id(io.spine.internal.dependency.Protobuf.GradlePlugin.id)
+    protobuf
 }
 
 // NOTE: this file is copied from the root project in the test setup.
 apply(from = "$rootDir/test-env.gradle")
-
 val enclosingRootDir: String by extra
-apply(from = "$enclosingRootDir/version.gradle.kts")
 
 repositories {
-    applyGitHubPackages("base", project)
-    applyGitHubPackages("tool-base", project)
-    applyGitHubPackages("model-compiler", project)
-    applyStandard()
+    standardToSpineSdk()
 }
 
 tasks {
@@ -83,15 +77,12 @@ tasks.build {
     dependsOn(compileProtoToJs)
 }
 
-val baseVersion: String by extra
-val protobufVersion: String = io.spine.internal.dependency.Protobuf.version
-
 dependencies {
     // Proto files coming from `base` are to be generated into JS.
-    protobuf("io.spine:spine-base:$baseVersion:proto@jar")
+    protobuf("io.spine:spine-base:${Spine.DefaultVersion.base}:proto@jar")
     
     // We want standard Google files to be used for imports.
-    implementation("com.google.protobuf:protobuf-java:${protobufVersion}:sources@jar")
+    implementation("com.google.protobuf:protobuf-java:${Protobuf.version}:sources@jar")
 
     // See https://github.com/google/protobuf-gradle-plugin#protos-in-dependencies for details.
 }
