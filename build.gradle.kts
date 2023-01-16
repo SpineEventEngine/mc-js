@@ -26,7 +26,6 @@
 
 import com.google.common.io.Files.createParentDirs
 import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
@@ -124,6 +123,7 @@ subprojects {
         all {
             resolutionStrategy {
                 force(
+                    JUnit.runner,
                     spine.base,
                     spine.testlib,
                     spine.toolBase,

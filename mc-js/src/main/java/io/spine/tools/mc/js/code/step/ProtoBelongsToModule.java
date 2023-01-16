@@ -26,39 +26,46 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import io.spine.code.fs.SourceCodeDirectory;
+import com.google.common.flogger.FluentLogger;
+import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.SourceFile;
-import io.spine.tools.js.fs.FileName;
-import io.spine.tools.js.fs.JsFiles;
 
 import java.nio.file.Path;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.function.Predicate;
 
 /**
- * A predicate determining if the given Protobuf file was compiled to JavaScript
- * and belongs to the specified module.
+ * A predicate determining if a Protobuf file belongs to the specified module.
+ *
+ * <p>The descendants of this class are supposed to work with different
+ * types of files, e.g. an original {@code .proto} file, a compiled {@code .java}, etc.
  */
-final class CompiledProtoBelongsToModule extends ProtoBelongsToModule {
+abstract class ProtoBelongsToModule implements Predicate<SourceFile> {
 
-    private final SourceCodeDirectory jsCodeRoot;
-
-    /**
-     * Creates a new instance.
-     *
-     * @param jsCodeRoot
-     *         the root directory for generated Protobufs
-     */
-    CompiledProtoBelongsToModule(SourceCodeDirectory jsCodeRoot) {
-        super();
-        checkNotNull(jsCodeRoot);
-        this.jsCodeRoot = jsCodeRoot;
-    }
+    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
     @Override
-    protected Path resolve(SourceFile file) {
-        var fileName = FileName.from(file.descriptor());
-        var filePath = JsFiles.resolve(jsCodeRoot, fileName);
-        return filePath;
+    public boolean test(SourceFile file) {
+        var filePath = resolve(file);
+        var exists = filePath.toFile().exists();
+        logger.atFinest()
+              .log("Checking if the file `%s` exists, result: `%b`.", filePath, exists);
+        return exists;
     }
+
+    /**
+     * Obtains this predicate operating with {@link FileDescriptor} instead of {@link SourceFile}.
+     */
+    public Predicate<FileDescriptor> forDescriptor() {
+        Predicate<FileDescriptor> result = descriptor -> test(SourceFile.from(descriptor));
+        return result;
+    }
+
+    /**
+     * Resolves the path to the file within the module.
+     *
+     * @param file
+     *         the file to resolve the path
+     * @return the absolute path to the file
+     */
+    protected abstract Path resolve(SourceFile file);
 }
