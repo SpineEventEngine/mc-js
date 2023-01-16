@@ -35,8 +35,9 @@ group = "io.spine.tools"
 val spine = Spine(project)
 
 dependencies {
-    api(gradleApi())
+    compileOnly(gradleApi())
 
+    api(spine.pluginBase)
     api(spine.modelCompiler)
 
     testImplementation(gradleTestKit())
