@@ -79,7 +79,7 @@ tasks.build {
 
 dependencies {
     // Proto files coming from `base` are to be generated into JS.
-    protobuf("io.spine:spine-base:${Spine.DefaultVersion.base}:proto@jar")
+    protobuf("io.spine:spine-base:${Spine.ArtifactVersion.base}:proto@jar")
     
     // We want standard Google files to be used for imports.
     implementation("com.google.protobuf:protobuf-java:${Protobuf.version}:sources@jar")
