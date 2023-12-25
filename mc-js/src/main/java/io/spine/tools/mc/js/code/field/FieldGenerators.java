@@ -60,7 +60,7 @@ public final class FieldGenerators {
     public static FieldGenerator createFor(FieldToParse field, CodeWriter writer) {
         checkNotNull(field);
         checkNotNull(writer);
-        FieldDescriptor descriptor = field.descriptor();
+        var descriptor = field.descriptor();
         if (isMap(descriptor)) {
             return mapGenerator(field, writer);
         }
@@ -85,10 +85,10 @@ public final class FieldGenerators {
      * the {@code ...Entry} {@code "key"} field.
      */
     private static FieldGenerator mapGenerator(FieldToParse field, CodeWriter writer) {
-        FieldDescriptor descriptor = field.descriptor();
-        Parser keyParser = mapKeyParser(descriptor, writer);
-        Parser valueParser = mapValueParser(descriptor, writer);
-        FieldPrecondition valuePrecondition = mapValuePrecondition(descriptor, writer);
+        var descriptor = field.descriptor();
+        var keyParser = mapKeyParser(descriptor, writer);
+        var valueParser = mapValueParser(descriptor, writer);
+        var valuePrecondition = mapValuePrecondition(descriptor, writer);
 
         FieldGenerator generator = MapFieldGenerator.newBuilder()
                 .setField(field)
@@ -104,9 +104,9 @@ public final class FieldGenerators {
      * Creates a {@linkplain RepeatedFieldGenerator generator} for the {@code repeated} proto field.
      */
     private static FieldGenerator repeatedGenerator(FieldToParse field, CodeWriter writer) {
-        FieldDescriptor descriptor = field.descriptor();
-        FieldPrecondition precondition = preconditionFor(descriptor, writer);
-        Parser parser = Parser.createFor(descriptor, writer);
+        var descriptor = field.descriptor();
+        var precondition = preconditionFor(descriptor, writer);
+        var parser = Parser.createFor(descriptor, writer);
         FieldGenerator generator = RepeatedFieldGenerator.newBuilder()
                 .setField(field)
                 .setPrecondition(precondition)
@@ -120,9 +120,9 @@ public final class FieldGenerators {
      * Creates a {@linkplain SingularFieldGenerator generator} for the ordinary proto field.
      */
     private static FieldGenerator singularGenerator(FieldToParse field, CodeWriter writer) {
-        FieldDescriptor descriptor = field.descriptor();
-        FieldPrecondition precondition = preconditionFor(descriptor, writer);
-        Parser parser = Parser.createFor(descriptor, writer);
+        var descriptor = field.descriptor();
+        var precondition = preconditionFor(descriptor, writer);
+        var parser = Parser.createFor(descriptor, writer);
         FieldGenerator generator = SingularFieldGenerator.newBuilder()
                 .setField(field)
                 .setPrecondition(precondition)
@@ -137,8 +137,8 @@ public final class FieldGenerators {
      */
     private static FieldPrecondition
     mapValuePrecondition(FieldDescriptor field, CodeWriter writer) {
-        FieldDescriptor valueDescriptor = valueDescriptor(field);
-        FieldPrecondition precondition = preconditionFor(valueDescriptor, writer);
+        var valueDescriptor = valueDescriptor(field);
+        var precondition = preconditionFor(valueDescriptor, writer);
         return precondition;
     }
 
@@ -146,8 +146,8 @@ public final class FieldGenerators {
      * Creates a {@code FieldParser} for the key of the map field.
      */
     private static Parser mapKeyParser(FieldDescriptor field, CodeWriter writer) {
-        FieldDescriptor keyDescriptor = keyDescriptor(field);
-        Parser parser = Parser.createFor(keyDescriptor, writer);
+        var keyDescriptor = keyDescriptor(field);
+        var parser = Parser.createFor(keyDescriptor, writer);
         return parser;
     }
 
@@ -155,8 +155,8 @@ public final class FieldGenerators {
      * Creates a {@code FieldParser} for the value of the map field.
      */
     private static Parser mapValueParser(FieldDescriptor field, CodeWriter writer) {
-        FieldDescriptor valueDescriptor = valueDescriptor(field);
-        Parser parser = Parser.createFor(valueDescriptor, writer);
+        var valueDescriptor = valueDescriptor(field);
+        var parser = Parser.createFor(valueDescriptor, writer);
         return parser;
     }
 }

@@ -80,8 +80,8 @@ public final class FieldToParse {
      * Obtains the reference to the field value on the source object.
      */
     public String value() {
-        String fieldJsonName = descriptor.getJsonName();
-        String jsObject = objectVariable + '.' + fieldJsonName;
+        var fieldJsonName = descriptor.getJsonName();
+        var jsObject = objectVariable + '.' + fieldJsonName;
         return jsObject;
     }
 }

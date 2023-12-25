@@ -55,7 +55,7 @@ public final class Return extends Line {
      */
     public static Return stringLiteral(String literal) {
         checkNotNull(literal);
-        String quoted = format("'%s'", literal);
+        var quoted = format("'%s'", literal);
         return new Return(quoted);
     }
 

@@ -70,9 +70,9 @@ final class MessagePrecondition extends FieldPrecondition {
         if (isProtobufValueType()) {
             return;
         }
-        CodeWriter writer = writer();
+        var writer = writer();
         writer.ifNull(value);
-        String mergeNull = String.format(mergeFieldFormat, "null");
+        var mergeNull = String.format(mergeFieldFormat, "null");
         writer.append(mergeNull);
         writer.enterElseBlock();
     }
@@ -88,11 +88,11 @@ final class MessagePrecondition extends FieldPrecondition {
      * Checks if the processed {@code field} is of the Protobuf {@link Value} type.
      */
     private boolean isProtobufValueType() {
-        String valueType = Value.getDescriptor()
-                                .getFullName();
-        String fieldType = field.getMessageType()
-                                .getFullName();
-        boolean isValueType = fieldType.equals(valueType);
+        var valueType = Value.getDescriptor()
+                             .getFullName();
+        var fieldType = field.getMessageType()
+                             .getFullName();
+        var isValueType = fieldType.equals(valueType);
         return isValueType;
     }
 }

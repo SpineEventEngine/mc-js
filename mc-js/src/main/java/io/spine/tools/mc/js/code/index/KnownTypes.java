@@ -73,7 +73,7 @@ final class KnownTypes implements Snippet {
     @Override
     public CodeWriter writer() {
         List<Map.Entry<String, TypeName>> entries = mapEntries(fileSet);
-        MapExport mapSnippet = MapExport.newBuilder(MAP_NAME)
+        var mapSnippet = MapExport.newBuilder(MAP_NAME)
                 .withEntries(entries)
                 .build();
         return mapSnippet.writer();
@@ -83,7 +83,7 @@ final class KnownTypes implements Snippet {
         Set<Type<?, ?>> allTypes =
                 TypeSet.from(fileSet)
                        .allTypes();
-        ImmutableList<Map.Entry<String, TypeName>> entries =
+        var entries =
                 allTypes.stream()
                         .map(KnownTypes::mapEntry)
                         .collect(toImmutableList());
@@ -95,8 +95,8 @@ final class KnownTypes implements Snippet {
      * the "{@linkplain TypeUrl type-url}-to-JS-type" format.
      */
     private static Map.Entry<String, TypeName> mapEntry(Type<?, ?> type) {
-        TypeUrl typeUrl = type.url();
-        TypeName typeName = TypeName.from(type.descriptor());
+        var typeUrl = type.url();
+        var typeName = TypeName.from(type.descriptor());
         return Maps.immutableEntry(typeUrl.value(), typeName);
     }
 }

@@ -53,7 +53,7 @@ public final class Import extends Line {
      */
     public static Import fileRelativeToRoot(FileName file) {
         checkNotNull(file);
-        String content = require(file.pathFromRoot());
+        var content = require(file.pathFromRoot());
         return new Import(content);
     }
 
@@ -77,7 +77,7 @@ public final class Import extends Line {
     public static Import fileRelativeTo(FileName fileToImport, FileName relativeTo) {
         checkNotNull(fileToImport);
         checkNotNull(relativeTo);
-        String prefix = relativeTo.pathToRoot();
+        var prefix = relativeTo.pathToRoot();
         return withPrefix(prefix, fileToImport);
     }
 

@@ -26,12 +26,15 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import com.google.common.flogger.FluentLogger;
 import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.SourceFile;
+import io.spine.logging.Logger;
+import io.spine.logging.LoggingFactory;
 
 import java.nio.file.Path;
 import java.util.function.Predicate;
+
+import static java.lang.String.format;
 
 /**
  * A predicate determining if a Protobuf file belongs to the specified module.
@@ -41,14 +44,16 @@ import java.util.function.Predicate;
  */
 abstract class ProtoBelongsToModule implements Predicate<SourceFile> {
 
-    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private static final Logger<?> logger = LoggingFactory.forEnclosingClass();
+
 
     @Override
     public boolean test(SourceFile file) {
         var filePath = resolve(file);
         var exists = filePath.toFile().exists();
-        logger.atFinest()
-              .log("Checking if the file `%s` exists, result: `%b`.", filePath, exists);
+        logger.atTrace()
+              .log(() -> format("Checking if the file `%s` exists, result: `%b`.",
+                                filePath, exists));
         return exists;
     }
 

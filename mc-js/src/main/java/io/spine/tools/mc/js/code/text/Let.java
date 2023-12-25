@@ -58,7 +58,7 @@ public final class Let extends Line {
     public static Let newInstance(String name, TypeName type) {
         checkNotNull(name);
         checkNotNull(type);
-        String initializer = "new " + type + "()";
+        var initializer = "new " + type + "()";
         return withValue(name, initializer);
     }
 }

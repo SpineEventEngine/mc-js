@@ -62,14 +62,14 @@ final class BytesParser extends AbstractParser {
     public void parseIntoVariable(String value, String variable) {
         checkNotNull(value);
         checkNotNull(variable);
-        Import base64Import = Import.library(BASE64_LIB);
+        var base64Import = Import.library(BASE64_LIB);
         writer().append(base64Import.namedAs(BASE64_VAR))
                 .append(parsedVariable(variable, value));
     }
 
     @SuppressWarnings("DuplicateStringLiteralInspection") // Necessary duplication with own test.
     private static Let parsedVariable(String name, String valueToParse) {
-        String initializer = BASE64_VAR + ".toByteArray(" + valueToParse + ')';
+        var initializer = BASE64_VAR + ".toByteArray(" + valueToParse + ')';
         return Let.withValue(name, initializer);
     }
 }

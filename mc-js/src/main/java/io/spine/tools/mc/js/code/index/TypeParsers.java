@@ -27,14 +27,12 @@
 package io.spine.tools.mc.js.code.index;
 
 import com.google.common.collect.Maps;
-import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.tools.js.code.TypeName;
 import io.spine.code.proto.FileSet;
-import io.spine.tools.mc.js.code.text.Snippet;
+import io.spine.tools.js.code.TypeName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.text.MapExport;
+import io.spine.tools.mc.js.code.text.Snippet;
 import io.spine.type.MessageType;
-import io.spine.type.TypeUrl;
 
 import java.util.Collection;
 import java.util.List;
@@ -63,8 +61,8 @@ final class TypeParsers implements Snippet {
 
     @Override
     public CodeWriter writer() {
-        List<Map.Entry<String, TypeName>> entries = mapEntries(fileSet);
-        MapExport mapSnippet = MapExport.newBuilder(MAP_NAME)
+        var entries = mapEntries(fileSet);
+        var mapSnippet = MapExport.newBuilder(MAP_NAME)
                 .withEntries(entries)
                 .build();
         return mapSnippet.writer();
@@ -72,11 +70,11 @@ final class TypeParsers implements Snippet {
 
     private static List<Map.Entry<String, TypeName>> mapEntries(FileSet fileSet) {
         Collection<MessageType> typesWithParsers = newArrayList();
-        for (FileDescriptor file : fileSet.files()) {
+        for (var file : fileSet.files()) {
             Collection<MessageType> typesInFile = CreateParsers.targetTypes(file);
             typesWithParsers.addAll(typesInFile);
         }
-        List<Map.Entry<String, TypeName>> entries = typesWithParsers
+        var entries = typesWithParsers
                 .stream()
                 .map(TypeParsers::mapEntry)
                 .collect(toList());
@@ -84,8 +82,8 @@ final class TypeParsers implements Snippet {
     }
 
     private static Map.Entry<String, TypeName> mapEntry(MessageType type) {
-        TypeUrl typeUrl = type.url();
-        TypeName typeName = TypeName.ofParser(type.descriptor());
+        var typeUrl = type.url();
+        var typeName = TypeName.ofParser(type.descriptor());
         return Maps.immutableEntry(typeUrl.value(), typeName);
     }
 }

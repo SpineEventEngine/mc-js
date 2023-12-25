@@ -53,7 +53,7 @@ public class MapExport implements Snippet {
 
     @Override
     public CodeWriter writer() {
-        CodeWriter lines = new CodeWriter();
+        var lines = new CodeWriter();
         lines.append("module.exports." + mapName + " = new Map([");
         appendEntries(lines);
         lines.append("]);");
@@ -88,7 +88,7 @@ public class MapExport implements Snippet {
          */
         @CanIgnoreReturnValue
         public Builder withEntry(String key, Object value) {
-            Line entry = mapEntry(key, value);
+            var entry = mapEntry(key, value);
             entries.add(entry);
             return this;
         }
@@ -117,7 +117,7 @@ public class MapExport implements Snippet {
         private static Line mapEntry(String key, Object value) {
             checkNotNull(key);
             checkNotNull(value);
-            String entry = format("['%s', %s]", key, value);
+            var entry = format("['%s', %s]", key, value);
             return Line.of(entry);
         }
     }

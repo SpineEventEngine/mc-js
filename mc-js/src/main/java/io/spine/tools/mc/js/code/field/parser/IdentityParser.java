@@ -34,7 +34,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * The generator of the code for parsing proto value from the JSON to itself.
  *
- * <p>The number of proto types like {@code int32}, {@code string}, {@code bool} and others are
+ * <p>The number of Proto types like {@code int32}, {@code string}, {@code bool} and others are
  * represented in JSON in the same way as in the JS.
  *
  * <p>The {@code IdentityParser} "parses" them by just assigning the variable to the passed value.

@@ -91,8 +91,8 @@ final class PrimitiveTypeParser extends AbstractParser {
         checkNotNull(writer);
         checkState(factories.containsKey(fieldType),
                    "An attempt to get a parser for the unknown primitive type: `%s`.", fieldType);
-        ParserFactory factory = factories.get(fieldType);
-        Parser parser = factory.apply(writer);
+        var factory = factories.get(fieldType);
+        var parser = factory.apply(writer);
         return parser;
     }
 
@@ -106,7 +106,7 @@ final class PrimitiveTypeParser extends AbstractParser {
     public void parseIntoVariable(String value, String variable) {
         checkNotNull(value);
         checkNotNull(variable);
-        Parser parser = createFor(fieldType, writer());
+        var parser = createFor(fieldType, writer());
         parser.parseIntoVariable(value, variable);
     }
 

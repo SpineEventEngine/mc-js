@@ -56,7 +56,7 @@ final class LongParser extends AbstractParser {
     }
 
     private static Let parsedVariable(String name, String valueToParse) {
-        String initializer = format("parseInt(%s)", valueToParse);
+        var initializer = format("parseInt(%s)", valueToParse);
         return Let.withValue(name, initializer);
     }
 }
