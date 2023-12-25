@@ -32,15 +32,15 @@ plugins {
 
 group = "io.spine.tools"
 
-val spine = Spine(project)
 
 dependencies {
     compileOnly(gradleApi())
 
-    api(spine.pluginBase)
-    api(spine.modelCompiler)
+    api(Spine.pluginBase)
+    api(Spine.modelCompiler)
+    api(Spine.Logging.lib)
 
     testImplementation(gradleTestKit())
-    testImplementation(spine.testlib)
-    testImplementation(spine.pluginTestlib)
+    testImplementation(Spine.testlib)
+    testImplementation(Spine.pluginTestlib)
 }

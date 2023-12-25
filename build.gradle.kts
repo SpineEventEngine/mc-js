@@ -25,7 +25,6 @@
  */
 
 import com.google.common.io.Files.createParentDirs
-import com.google.protobuf.gradle.protobuf
 import io.spine.internal.dependency.CheckerFramework
 import io.spine.internal.dependency.ErrorProne
 import io.spine.internal.dependency.FindBugs
@@ -38,8 +37,6 @@ import io.spine.internal.dependency.Truth
 import io.spine.internal.gradle.publish.IncrementGuard
 import io.spine.internal.gradle.VersionWriter
 import io.spine.internal.gradle.checkstyle.CheckStyleConfig
-import io.spine.internal.gradle.excludeProtobufLite
-import io.spine.internal.gradle.forceVersions
 import io.spine.internal.gradle.javac.configureErrorProne
 import io.spine.internal.gradle.javac.configureJavac
 import io.spine.internal.gradle.javadoc.JavadocConfig
@@ -114,8 +111,6 @@ subprojects {
         testRuntimeOnly(JUnit.runner)
     }
 
-    val spine = Spine(project)
-
     configurations {
         forceVersions()
         excludeProtobufLite()
@@ -124,10 +119,11 @@ subprojects {
             resolutionStrategy {
                 force(
                     JUnit.runner,
-                    spine.base,
-                    spine.testlib,
-                    spine.toolBase,
-                    spine.pluginBase,
+                    Spine.base,
+                    Spine.testlib,
+                    Spine.toolBase,
+                    Spine.pluginBase,
+                    Spine.Logging.lib
                 )
             }
         }
@@ -172,7 +168,7 @@ subprojects {
         outputs.file(propertiesFile)
 
         val versions = Properties().apply {
-            setProperty("baseVersion", Spine.DefaultVersion.base)
+            setProperty("baseVersion", Spine.ArtifactVersion.base)
             setProperty("protobufVersion", Protobuf.version)
             setProperty("gRPCVersion", Grpc.version)
         }
