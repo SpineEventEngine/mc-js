@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,26 +24,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-println("`slow-tests.gradle` script is deprecated. " +
-        "Please use `TaskContainer.registerTestTasks()` instead.")
+package io.spine.internal.dependency
 
-final def slowTag = 'slow' // See io.spine.testing.SlowTest
-
-task fastTest(type: Test) {
-    description = 'Executes all JUnit tests but the ones tagged as "slow".'
-    group = 'Verification'
-
-    useJUnitPlatform {
-        excludeTags slowTag
-    }
-}
-
-task slowTest(type: Test) {
-    description = 'Executes JUnit tests tagged as "slow".'
-    group = 'Verification'
-
-    useJUnitPlatform {
-        includeTags slowTag
-    }
-    shouldRunAfter fastTest
+// https://github.com/Kotlin/kotlinx-kover
+@Suppress("unused", "ConstPropertyName")
+object Kover {
+    const val version = "0.7.4"
+    const val id = "org.jetbrains.kotlinx.kover"
+    const val classpath = "org.jetbrains.kotlinx:kover-gradle-plugin:$version"
 }

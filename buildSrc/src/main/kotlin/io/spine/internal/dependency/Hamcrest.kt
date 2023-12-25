@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,20 +24,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.gradle.git
+package io.spine.internal.dependency
 
 /**
- * Branch names.
+ * The dependency on the Hamcrest, which is transitive for us.
+ *
+ * If you need assertions in Java, please use Google [Truth] instead.
+ * For Kotlin, please use [Kotest].
  */
-object Branch {
-
-    /**
-     * The default branch.
-     */
-    const val master = "master"
-
-    /**
-     * The branch used for publishing documentation to GitHub Pages.
-     */
-    const val documentation = "gh-pages"
+@Suppress("unused", "ConstPropertyName")
+object Hamcrest {
+    // https://github.com/hamcrest/JavaHamcrest/releases
+    private const val version = "2.2"
+    const val core = "org.hamcrest:hamcrest-core:${version}"
 }
