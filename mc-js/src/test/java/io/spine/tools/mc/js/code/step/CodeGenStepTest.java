@@ -104,7 +104,7 @@ class CodeGenStepTest {
         var expectedFilteredFiles = passedFiles
                 .filter(FileDescriptors::isGoogle)
                 .files();
-        int expectedProcessedFiles = passedFiles.size() - expectedFilteredFiles.size();
+        var expectedProcessedFiles = passedFiles.size() - expectedFilteredFiles.size();
         assertThat(processedFiles.size()).isEqualTo(expectedProcessedFiles);
     }
 

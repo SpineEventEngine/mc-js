@@ -54,7 +54,7 @@ class GenerateIndexFileTest {
 
     @BeforeAll
     static void compileProject() {
-        GivenProject project = GivenProject.serving(GenerateIndexFileTest.class);
+        var project = GivenProject.serving(GenerateIndexFileTest.class);
         fileSet = project.mainFileSet();
         generatedJsDir = project.generated().dir(main);
         task = new GenerateIndexFile(generatedJsDir);
@@ -64,17 +64,17 @@ class GenerateIndexFileTest {
     @DisplayName("write known types map to JS file")
     void writeKnownTypes() {
         task.performFor(fileSet);
-        Path knownTypes = JsFiles.resolve(generatedJsDir, INDEX.fileName());
+        var knownTypes = JsFiles.resolve(generatedJsDir, INDEX.fileName());
         assertTrue(exists(knownTypes));
     }
 
     @Test
     @DisplayName("generate imports for known types")
     void generateImports() {
-        CodeWriter generatedCode = GenerateIndexFile.codeFor(fileSet);
-        for (FileDescriptor file : fileSet.files()) {
-            FileName fileName = FileName.from(file);
-            String fileImport = "require('./" + fileName + "');";
+        var generatedCode = GenerateIndexFile.codeFor(fileSet);
+        for (var file : fileSet.files()) {
+            var fileName = FileName.from(file);
+            var fileImport = "require('./" + fileName + "');";
             assertContains(generatedCode, fileImport);
         }
     }

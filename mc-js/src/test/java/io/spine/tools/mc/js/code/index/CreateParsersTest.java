@@ -74,7 +74,7 @@ class CreateParsersTest {
 
     @BeforeAll
     static void compileProject() {
-        GivenProject project = GivenProject.serving(CreateParsersTest.class);
+        var project = GivenProject.serving(CreateParsersTest.class);
         fileSet = project.mainFileSet();
         generatedProtoDir = project.generatedMainJsSources();
         writer = new CreateParsers(project.generated().dir(SourceSetName.main));
@@ -91,22 +91,22 @@ class CreateParsersTest {
     @Test
     @DisplayName("generate explaining comment")
     void generateComment() {
-        CodeWriter code = CreateParsers.codeFor(file);
-        Comment expectedComment = Comment.generatedBySpine();
+        var code = CreateParsers.codeFor(file);
+        var expectedComment = Comment.generatedBySpine();
         assertContains(code, expectedComment.text());
     }
 
     @Test
     @DisplayName("generate imports")
     void generateImports() {
-        CodeWriter code = CreateParsers.codeFor(file);
-        String importPrefix = FileName.from(file)
-                                      .pathToRoot();
-        String abstractParserImport =
+        var code = CreateParsers.codeFor(file);
+        var importPrefix = FileName.from(file)
+                                   .pathToRoot();
+        var abstractParserImport =
                 Import.library(importPrefix + OBJECT_PARSER_FILE)
                       .toDefault()
                       .namedAs(OBJECT_PARSER_IMPORT_NAME);
-        String typeParsersImport =
+        var typeParsersImport =
                 Import.library(importPrefix + TYPE_PARSERS_FILE)
                       .toDefault()
                       .namedAs(TYPE_PARSERS_IMPORT_NAME);
@@ -124,8 +124,8 @@ class CreateParsersTest {
     @Test
     @DisplayName("write code for parsing of Spine options")
     void writeOptionsParseCode() {
-        FileDescriptor optionsFile = OptionsProto.getDescriptor()
-                                                 .getFile();
+        var optionsFile = OptionsProto.getDescriptor()
+                                      .getFile();
         Collection<MessageType> targets = CreateParsers.targetTypes(optionsFile);
         assertThat(targets).isNotEmpty();
     }
@@ -140,8 +140,8 @@ class CreateParsersTest {
 
     private static void checkProcessedFiles(FileSet fileSet) throws IOException {
         Collection<FileDescriptor> fileDescriptors = fileSet.files();
-        for (FileDescriptor file : fileDescriptors) {
-            List<Descriptor> messageTypes = file.getMessageTypes();
+        for (var file : fileDescriptors) {
+            var messageTypes = file.getMessageTypes();
             if (!FileDescriptors.isGoogle(file) && !messageTypes.isEmpty()) {
                 checkParseCodeAdded(file);
             }
@@ -149,9 +149,9 @@ class CreateParsersTest {
     }
 
     private static void checkParseCodeAdded(FileDescriptor file) throws IOException {
-        Path jsFilePath = JsFiles.resolve(generatedProtoDir, FileName.from(file));
-        for (MessageType messageType : TypeSet.onlyMessages(file)) {
-            TypeName parserTypeName = TypeName.ofParser(messageType.descriptor());
+        var jsFilePath = JsFiles.resolve(generatedProtoDir, FileName.from(file));
+        for (var messageType : TypeSet.onlyMessages(file)) {
+            var parserTypeName = TypeName.ofParser(messageType.descriptor());
             assertFileContains(jsFilePath, parserTypeName.value());
         }
     }
