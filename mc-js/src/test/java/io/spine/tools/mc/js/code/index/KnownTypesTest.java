@@ -42,7 +42,7 @@ import static io.spine.tools.mc.js.code.given.Generators.assertContains;
 class KnownTypesTest {
 
     /**
-     * {@link Any} type is used for tests as we known for sure it will be present among the
+     * {@link Any} type is used for tests as we know for sure it will be present among the
      * {@linkplain FileSet#load() types loaded from classpath}.
      */
     private static final Descriptor ANY = Any.getDescriptor();
