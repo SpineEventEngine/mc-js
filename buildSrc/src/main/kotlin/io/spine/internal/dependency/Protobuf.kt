@@ -26,7 +26,14 @@
 
 package io.spine.internal.dependency
 
-// https://github.com/protocolbuffers/protobuf
+/**
+ * Declaration of [Protobuf](https://github.com/protocolbuffers/protobuf) dependencies.
+ *
+ * NOTE: A special `protoc` version is used to generate JavaScript code.
+ * All `protoc` versions after 3.20.1 do not work as we expect.
+ *
+ * Any newer versions are broken by Google.
+ */
 @Suppress(
     "MemberVisibilityCanBePrivate" /* used directly from the outside */,
     "ConstPropertyName" /* https://bit.ly/kotlin-prop-names */
@@ -44,6 +51,13 @@ object Protobuf {
         "${group}:protobuf-kotlin:${version}"
     )
     const val compiler = "${group}:protoc:${version}"
+
+    // Defines the `protoc` compiler artifact
+    // for JavaScript rendering.
+    object JsRenderingProtoc {
+        private const val version = "3.20.1"
+        const val compiler = "${group}:protoc:$version"
+    }
 
     // https://github.com/google/protobuf-gradle-plugin/releases
     object GradlePlugin {
