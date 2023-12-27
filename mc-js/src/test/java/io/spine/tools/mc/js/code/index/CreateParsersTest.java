@@ -28,7 +28,6 @@ package io.spine.tools.mc.js.code.index;
 
 import com.google.common.testing.NullPointerTester;
 import com.google.protobuf.Any;
-import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FileDescriptor;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
@@ -40,7 +39,6 @@ import io.spine.tools.fs.SourceDir;
 import io.spine.tools.js.code.TypeName;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.js.fs.JsFiles;
-import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.given.GivenProject;
 import io.spine.tools.mc.js.code.text.Comment;
 import io.spine.tools.mc.js.code.text.Import;
@@ -50,9 +48,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 
 import static com.google.common.truth.Truth.assertThat;
 import static io.spine.testing.DisplayNames.NOT_ACCEPT_NULLS;
