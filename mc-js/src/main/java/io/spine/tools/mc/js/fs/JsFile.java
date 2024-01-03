@@ -50,7 +50,7 @@ public final class JsFile extends FileWithImports {
      */
     public JsFile(Path path) {
         super(path);
-        String fileName = path.toString();
+        var fileName = path.toString();
         checkArgument(fileName.endsWith(EXTENSION),
                       "A JavaScript file is expected. Passed: `%s`.", fileName);
     }
@@ -62,8 +62,8 @@ public final class JsFile extends FileWithImports {
 
     @Override
     protected String resolveImport(String line, Path generatedRoot, ExternalModules modules) {
-        ImportStatement importLine = new ImportStatement(this, line);
-        ImportStatement resolved = importLine.resolve(generatedRoot, modules);
+        var importLine = new ImportStatement(this, line);
+        var resolved = importLine.resolve(generatedRoot, modules);
         return resolved.text();
     }
 }

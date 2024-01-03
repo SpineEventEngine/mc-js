@@ -51,7 +51,7 @@ final class FloatParser extends AbstractParser {
     }
 
     private static Let parsedVariable(String name, String valueToParse) {
-        String initializer = "parseFloat(" + valueToParse + ')';
+        var initializer = "parseFloat(" + valueToParse + ')';
         return Let.withValue(name, initializer);
     }
 }

@@ -52,7 +52,7 @@ val compileProtoToJs by tasks.registering
 protobuf {
     generatedFilesBaseDir = "$projectDir/generated"
     protoc {
-        artifact = Protobuf.compiler
+        artifact = Protobuf.JsRenderingProtoc.compiler
     }
     generateProtoTasks {
         // Copy the task collection to avoid `ConcurrentModificationException`.
@@ -79,10 +79,10 @@ tasks.build {
 
 dependencies {
     // Proto files coming from `base` are to be generated into JS.
-    protobuf("io.spine:spine-base:${Spine.DefaultVersion.base}:proto@jar")
+    protobuf("io.spine:spine-base:${Spine.ArtifactVersion.base}:proto@jar")
     
     // We want standard Google files to be used for imports.
-    implementation("com.google.protobuf:protobuf-java:${Protobuf.version}:sources@jar")
+    implementation(Protobuf.protoSrcLib)
 
     // See https://github.com/google/protobuf-gradle-plugin#protos-in-dependencies for details.
 }

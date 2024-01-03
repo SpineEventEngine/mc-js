@@ -71,8 +71,8 @@ final class MapFieldGenerator extends FieldGenerator {
 
     @Override
     public void generate() {
-        String fieldValue = acquireFieldValue();
-        String value = iterateOwnAttributes(fieldValue);
+        var fieldValue = acquireFieldValue();
+        var value = iterateOwnAttributes(fieldValue);
         parseMapKey();
         mergeFieldValue(value);
         exitOwnAttributeIteration();
@@ -86,10 +86,10 @@ final class MapFieldGenerator extends FieldGenerator {
      */
     @Override
     String mergeFormat() {
-        FieldName fieldName = FieldName.from(field());
-        String getMap = "get" + fieldName + "Map()";
-        String setMapValue = "set(" + MAP_KEY + ", %s)";
-        String addToMapFormat = targetVariable() + '.' + getMap + '.' + setMapValue + ';';
+        var fieldName = FieldName.from(field());
+        var getMap = "get" + fieldName + "Map()";
+        var setMapValue = "set(" + MAP_KEY + ", %s)";
+        var addToMapFormat = targetVariable() + '.' + getMap + '.' + setMapValue + ';';
         return addToMapFormat;
     }
 
@@ -107,12 +107,12 @@ final class MapFieldGenerator extends FieldGenerator {
         writer().ifNotNullOrUndefined(jsObject)
                 .enterBlock("for (let " + ATTRIBUTE + " in " + jsObject + ')')
                 .enterIfBlock(jsObject + ".hasOwnProperty(" + ATTRIBUTE + ')');
-        String value = jsObject + '[' + ATTRIBUTE + ']';
+        var value = jsObject + '[' + ATTRIBUTE + ']';
         return value;
     }
 
     /**
-     * Generates the code to exit the own properties iteration.
+     * Generates the code to exit the own properties' iteration.
      *
      * <p>Returns the cursor to the {@code fromObject} method level.
      */

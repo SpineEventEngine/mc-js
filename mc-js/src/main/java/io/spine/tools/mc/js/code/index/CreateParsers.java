@@ -75,7 +75,7 @@ public final class CreateParsers extends CodeGenStep {
 
     @Override
     protected void generateFor(FileSet fileSet) {
-        for (FileDescriptor file : fileSet.files()) {
+        for (var file : fileSet.files()) {
             generateFor(file);
         }
     }
@@ -84,16 +84,16 @@ public final class CreateParsers extends CodeGenStep {
         if (targetTypes(file).isEmpty()) {
             return;
         }
-        CodeWriter code = codeFor(file);
-        FileWriter writer = FileWriter.newInstance(jsCodeRoot(), file);
+        var code = codeFor(file);
+        var writer = FileWriter.newInstance(jsCodeRoot(), file);
         writer.append(code);
     }
 
     @VisibleForTesting
     static CodeWriter codeFor(FileDescriptor file) {
-        ImmutableCollection<MessageType> types = targetTypes(file);
-        FileName fileName = FileName.from(file);
-        CodeWriter writer = new CodeWriter();
+        var types = targetTypes(file);
+        var fileName = FileName.from(file);
+        var writer = new CodeWriter();
         writer.append(emptyLine())
               .append(Comment.generatedBySpine())
               .append(emptyLine())
@@ -109,9 +109,9 @@ public final class CreateParsers extends CodeGenStep {
      *         the file to generate imports for
      */
     private static CodeWriter imports(FileName targetFile) {
-        String objectParserImport = importObjectParserIn(targetFile);
-        String typeParsersImport = importTypeParsersIn(targetFile);
-        CodeWriter lines = new CodeWriter();
+        var objectParserImport = importObjectParserIn(targetFile);
+        var typeParsersImport = importTypeParsersIn(targetFile);
+        var lines = new CodeWriter();
         lines.append(objectParserImport)
              .append(typeParsersImport);
         return lines;
@@ -124,9 +124,9 @@ public final class CreateParsers extends CodeGenStep {
      *         all messages in a file to generate parser for
      */
     private static CodeWriter parses(ImmutableCollection<MessageType> messageTypes) {
-        CodeWriter writer = new CodeWriter();
-        for (MessageType message : messageTypes) {
-            Parser parser = new Parser(message.descriptor());
+        var writer = new CodeWriter();
+        for (var message : messageTypes) {
+            var parser = new Parser(message.descriptor());
             writer.append(emptyLine())
                   .append(parser);
         }

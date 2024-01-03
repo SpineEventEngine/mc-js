@@ -28,7 +28,6 @@ package io.spine.tools.mc.js.code.text;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.Descriptors.Descriptor;
-import com.google.protobuf.Descriptors.FieldDescriptor;
 import io.spine.tools.js.code.MethodReference;
 import io.spine.tools.js.code.TypeName;
 import io.spine.tools.js.fs.FileName;
@@ -102,7 +101,7 @@ public final class Parser implements Snippet {
 
     @Override
     public CodeWriter writer() {
-        CodeWriter lines = new CodeWriter()
+        var lines = new CodeWriter()
                 .append(constructor())
                 .append(initPrototype())
                 .append(initConstructor())
@@ -133,8 +132,8 @@ public final class Parser implements Snippet {
     }
 
     private Method constructor() {
-        MethodReference reference = MethodReference.constructor(typeName());
-        String callSuper = format("%s.call(this);", superClass());
+        var reference = MethodReference.constructor(typeName());
+        var callSuper = format("%s.call(this);", superClass());
         return Method.newBuilder(reference)
                 .appendToBody(callSuper)
                 .build();
@@ -147,7 +146,7 @@ public final class Parser implements Snippet {
     }
 
     private String initConstructor() {
-        MethodReference reference = MethodReference.onPrototype(typeName(), "constructor");
+        var reference = MethodReference.onPrototype(typeName(), "constructor");
         return format("%s = %s;", reference, typeName());
     }
 
@@ -159,8 +158,9 @@ public final class Parser implements Snippet {
      */
     @VisibleForTesting
     CodeWriter fromObjectMethod() {
-        String methodName = MethodReference.onPrototype(typeName(), PARSE_METHOD).value();
-        CodeWriter lines = new CodeWriter()
+        var methodName = MethodReference.onPrototype(typeName(), PARSE_METHOD)
+                                        .value();
+        var lines = new CodeWriter()
                 .enterMethod(methodName, FROM_OBJECT_ARG);
         checkParsedObject(lines)
                 .append(emptyLine())
@@ -182,7 +182,7 @@ public final class Parser implements Snippet {
     }
 
     private static Let initializedMessageInstance(Descriptor message) {
-        TypeName typeName = TypeName.from(message);
+        var typeName = TypeName.from(message);
         return Let.newInstance(MESSAGE, typeName);
     }
 
@@ -190,11 +190,11 @@ public final class Parser implements Snippet {
      * Obtains the code necessary to parse and set the message fields.
      */
     private static CodeWriter parseFields(Descriptor message) {
-        CodeWriter lines = new CodeWriter();
-        for (FieldDescriptor field : message.getFields()) {
+        var lines = new CodeWriter();
+        for (var field : message.getFields()) {
             lines.append(emptyLine());
-            FieldToParse fieldToParse = new FieldToParse(field, FROM_OBJECT_ARG, MESSAGE);
-            FieldGenerator generator = FieldGenerators.createFor(fieldToParse, lines);
+            var fieldToParse = new FieldToParse(field, FROM_OBJECT_ARG, MESSAGE);
+            var generator = FieldGenerators.createFor(fieldToParse, lines);
             generator.generate();
         }
         return lines;
@@ -229,7 +229,7 @@ public final class Parser implements Snippet {
     }
 
     private static Import defaultImport(String importedFile, FileName targetFile) {
-        String pathRelativeToTarget = targetFile.pathToRoot() + importedFile;
+        var pathRelativeToTarget = targetFile.pathToRoot() + importedFile;
         return Import.library(pathRelativeToTarget)
                      .toDefault();
     }

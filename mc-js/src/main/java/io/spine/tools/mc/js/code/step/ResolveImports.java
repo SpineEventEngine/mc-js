@@ -28,7 +28,7 @@ package io.spine.tools.mc.js.code.step;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.spine.code.proto.FileSet;
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
 import io.spine.tools.code.SourceSetName;
 import io.spine.tools.fs.ExternalModules;
 import io.spine.tools.fs.Generated;
@@ -39,6 +39,7 @@ import io.spine.tools.mc.js.fs.JsFile;
 import java.nio.file.Path;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 
 /**
  * A task to resolve imports in generated files.
@@ -48,7 +49,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>This step should be performed last among {@linkplain CodeGenStep code generation steps}
  * to ensure that imports won't be modified later.
  */
-public final class ResolveImports extends CodeGenStep implements Logging {
+public final class ResolveImports extends CodeGenStep implements WithLogging {
 
     private final Path generatedRoot;
     private final ExternalModules modules;
@@ -64,7 +65,8 @@ public final class ResolveImports extends CodeGenStep implements Logging {
         var jsCodeRoot = jsCodeRoot();
         for (var file : fileSet.files()) {
             var fileName = FileName.from(file);
-            _debug().log("Resolving imports in the file `%s`.", fileName);
+            logger().atDebug()
+                    .log(() -> format("Resolving imports in the file `%s`.", fileName));
             var filePath = JsFiles.resolve(jsCodeRoot, fileName);
             resolveInFile(filePath);
         }

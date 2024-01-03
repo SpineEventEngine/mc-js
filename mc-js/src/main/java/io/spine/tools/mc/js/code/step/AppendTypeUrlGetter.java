@@ -41,7 +41,6 @@ import io.spine.tools.mc.js.code.text.Return;
 import io.spine.tools.mc.js.code.text.Snippet;
 import io.spine.tools.mc.js.fs.FileWriter;
 import io.spine.type.Type;
-import io.spine.type.TypeUrl;
 
 import static io.spine.tools.code.Line.emptyLine;
 
@@ -60,22 +59,22 @@ public class AppendTypeUrlGetter extends CodeGenStep {
 
     @Override
     protected void generateFor(FileSet fileSet) {
-        for (FileDescriptor file : fileSet.files()) {
+        for (var file : fileSet.files()) {
             generateFor(file);
         }
     }
 
     private void generateFor(FileDescriptor file) {
-        CodeWriter typeUrlMethods = typeUrlMethods(file);
-        FileWriter writer = FileWriter.newInstance(jsCodeRoot(), file);
+        var typeUrlMethods = typeUrlMethods(file);
+        var writer = FileWriter.newInstance(jsCodeRoot(), file);
         writer.append(typeUrlMethods);
     }
 
     @VisibleForTesting
     static CodeWriter typeUrlMethods(FileDescriptor file) {
-        CodeWriter writer = new CodeWriter();
-        TypeSet types = TypeSet.from(file);
-        for (Type<?, ?> type : types.messagesAndEnums()) {
+        var writer = new CodeWriter();
+        var types = TypeSet.from(file);
+        for (var type : types.messagesAndEnums()) {
             Snippet method = typeUrlMethod(type);
             writer.append(emptyLine());
             writer.append(Comment.generatedBySpine());
@@ -86,16 +85,16 @@ public class AppendTypeUrlGetter extends CodeGenStep {
 
     @VisibleForTesting
     static Method typeUrlMethod(Type<?, ?> type) {
-        TypeName typeName = TypeName.from(type.descriptor());
-        MethodReference reference = MethodReference.onType(typeName, METHOD_NAME);
-        Method method = Method.newBuilder(reference)
+        var typeName = TypeName.from(type.descriptor());
+        var reference = MethodReference.onType(typeName, METHOD_NAME);
+        var method = Method.newBuilder(reference)
                 .appendToBody(returnTypeUrl(type))
                 .build();
         return method;
     }
 
     private static Line returnTypeUrl(Type<?, ?> type) {
-        TypeUrl typeUrl = type.url();
+        var typeUrl = type.url();
         return Return.stringLiteral(typeUrl.value());
     }
 }

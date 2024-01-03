@@ -161,7 +161,7 @@ class ResolveImportsTest {
 
     private static IterableSubject afterResolve(Path file, ResolveImports task) throws IOException {
         task.resolveInFile(file);
-        List<String> lines = Files.readAllLines(file);
+        var lines = Files.readAllLines(file);
         return assertThat(lines);
     }
 

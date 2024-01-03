@@ -73,7 +73,7 @@ public interface Parser {
     static Parser createFor(FieldDescriptor field, CodeWriter writer) {
         checkNotNull(field);
         checkNotNull(writer);
-        FieldDeclaration fdecl = new FieldDeclaration(field);
+        var fdecl = new FieldDeclaration(field);
         if (fdecl.isMessage()) {
             return new MessageParser(field, writer);
         }

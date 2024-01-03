@@ -52,7 +52,7 @@ final class EnumParser extends AbstractParser {
     EnumParser(FieldDescriptor field, CodeWriter writer) {
         super(writer);
         checkNotNull(field);
-        EnumDescriptor enumType = field.getEnumType();
+        var enumType = field.getEnumType();
         this.typeName = TypeName.from(enumType);
     }
 
@@ -71,7 +71,7 @@ final class EnumParser extends AbstractParser {
     }
 
     private Let parsedValue(String name, String valueToParse) {
-        String initializer = typeName.value() + '[' + valueToParse + ']';
+        var initializer = typeName.value() + '[' + valueToParse + ']';
         return Let.withValue(name, initializer);
     }
 }

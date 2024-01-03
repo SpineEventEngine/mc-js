@@ -70,10 +70,10 @@ final class MessageParser extends AbstractParser {
     }
 
     private Let parsedVariable(String name, String valueToParse) {
-        TypeUrl typeUrl = TypeUrl.from(message);
-        String obtainParser = format("%s.%s('%s')",
-                                     TYPE_PARSERS_IMPORT_NAME, PARSER_BY_URL_METHOD, typeUrl);
-        String parserCall = parseMethodCall(obtainParser, valueToParse);
+        var typeUrl = TypeUrl.from(message);
+        var obtainParser = format("%s.%s('%s')",
+                                  TYPE_PARSERS_IMPORT_NAME, PARSER_BY_URL_METHOD, typeUrl);
+        var parserCall = parseMethodCall(obtainParser, valueToParse);
         return Let.withValue(name, parserCall);
     }
 }

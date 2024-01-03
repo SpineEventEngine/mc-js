@@ -35,7 +35,6 @@ import io.spine.tools.code.Line;
 import io.spine.tools.mc.js.code.text.Snippet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -120,9 +119,10 @@ public final class CodeWriter {
                 indent.size(),
                 writer.indent.size()
         );
-        int levelDifference = indent.level() - writer.indent().level();
-        for (IndentedLine line : writer.lines) {
-            IndentedLine adjusted = line.adjustLevelBy(levelDifference);
+        var levelDifference = indent.level() - writer.indent()
+                                                     .level();
+        for (var line : writer.lines) {
+            var adjusted = line.adjustLevelBy(levelDifference);
             append(adjusted);
         }
         return this;
@@ -145,7 +145,7 @@ public final class CodeWriter {
     @CanIgnoreReturnValue
     public CodeWriter append(String code) {
         checkNotNull(code);
-        IndentedLine indented = IndentedLine.of(indent, code);
+        var indented = IndentedLine.of(indent, code);
         return append(indented);
     }
 
@@ -184,7 +184,7 @@ public final class CodeWriter {
     public CodeWriter enterMethod(String methodName, String... methodArgs) {
         checkNotNull(methodName);
         checkNotNull(methodArgs);
-        String argString = join(", ", methodArgs);
+        var argString = join(", ", methodArgs);
         append(methodName + " = function(" + argString + ") {");
         increaseDepth();
         return this;
@@ -342,13 +342,13 @@ public final class CodeWriter {
      */
     public static CodeWriter commaSeparated(List<Line> lines) {
         checkNotNull(lines);
-        CodeWriter code = new CodeWriter();
-        for (Iterator<Line> it = lines.iterator(); it.hasNext(); ) {
-            Line line = it.next();
-            boolean isLast = !it.hasNext();
-            String editedLine = isLast
-                                ? line.text()
-                                : line.text() + ',';
+        var code = new CodeWriter();
+        for (var it = lines.iterator(); it.hasNext(); ) {
+            var line = it.next();
+            var isLast = !it.hasNext();
+            var editedLine = isLast
+                             ? line.text()
+                             : line.text() + ',';
             code.append(editedLine);
         }
         return code;
@@ -361,10 +361,10 @@ public final class CodeWriter {
      */
     @Override
     public String toString() {
-        String result =
+        var result =
                 lines.stream()
-                     .map(Line::toString)
-                     .collect(joining(lineSeparator()));
+                        .map(Line::toString)
+                        .collect(joining(lineSeparator()));
         return result;
     }
 
@@ -372,10 +372,10 @@ public final class CodeWriter {
      * Obtains these lines with {@link #lineSeparator()} at the end of each line.
      */
     public ImmutableList<String> separated() {
-        ImmutableList<String> result =
+        var result =
                 lines.stream()
-                     .map(l -> l + lineSeparator())
-                     .collect(toImmutableList());
+                        .map(l -> l + lineSeparator())
+                        .collect(toImmutableList());
         return result;
     }
 
@@ -397,7 +397,7 @@ public final class CodeWriter {
         if (!(o instanceof CodeWriter)) {
             return false;
         }
-        CodeWriter lines = (CodeWriter) o;
+        var lines = (CodeWriter) o;
         return this.lines.equals(lines.lines);
     }
 

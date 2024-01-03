@@ -123,8 +123,8 @@ class ParserTest {
     void parseEnum() {
         parser = createFor(enumField(), writer);
         parser.parseIntoVariable(VALUE, VARIABLE);
-        EnumDescriptor enumType = enumField().getEnumType();
-        TypeName typeName = TypeName.from(enumType);
+        var enumType = enumField().getEnumType();
+        var typeName = TypeName.from(enumType);
         var code = "let " + VARIABLE + " = " + typeName + '[' + VALUE + ']';
         assertContains(code);
     }

@@ -52,7 +52,7 @@ final class RepeatedFieldGenerator extends FieldGenerator {
 
     @Override
     public void generate() {
-        String fieldValue = acquireFieldValue();
+        var fieldValue = acquireFieldValue();
         iterateListValues(fieldValue);
         mergeFieldValue(LIST_ITEM);
         exitListValueIteration();
@@ -66,9 +66,9 @@ final class RepeatedFieldGenerator extends FieldGenerator {
      */
     @Override
     String mergeFormat() {
-        FieldName fieldName = FieldName.from(field());
-        String addFunctionName = "add" + fieldName;
-        String addToListFormat = targetVariable() + '.' + addFunctionName + "(%s);";
+        var fieldName = FieldName.from(field());
+        var addFunctionName = "add" + fieldName;
+        var addToListFormat = targetVariable() + '.' + addFunctionName + "(%s);";
         return addToListFormat;
     }
 

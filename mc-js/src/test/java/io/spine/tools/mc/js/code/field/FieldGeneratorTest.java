@@ -118,7 +118,7 @@ class FieldGeneratorTest {
     void callParser() {
         var fieldValue = singularGenerator.acquireFieldValue();
         singularGenerator.generate();
-        TypeUrl typeUrl = TypeUrl.from(singularField().getMessageType());
+        var typeUrl = TypeUrl.from(singularField().getMessageType());
         var parserCall = format("TypeParsers.parserFor('%s').fromObject(%s);", typeUrl, fieldValue);
         assertContains(jsOutput, parserCall);
     }
@@ -127,7 +127,7 @@ class FieldGeneratorTest {
     @DisplayName("parse object attribute value to obtain key in case of map field")
     void parseMapKey() {
         mapGenerator.generate();
-        String parseAttribute = MAP_KEY + " = parseInt(" + ATTRIBUTE + ')';
+        var parseAttribute = MAP_KEY + " = parseInt(" + ATTRIBUTE + ')';
         assertContains(jsOutput, parseAttribute);
     }
 

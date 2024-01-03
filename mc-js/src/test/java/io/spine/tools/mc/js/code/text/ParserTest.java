@@ -67,7 +67,7 @@ class ParserTest {
     @DisplayName("handle message fields in `fromObject` method")
     void handleMessageFields() {
         var lines = parser.fromObjectMethod();
-        for (FieldDescriptor fieldDescriptor : message.getFields()) {
+        for (var fieldDescriptor : message.getFields()) {
             assertContains(lines, fieldDescriptor.getJsonName());
         }
     }
@@ -104,15 +104,15 @@ class ParserTest {
     }
 
     private static void assertCtorInitialization(CodeWriter lines, Descriptor message) {
-        TypeName expectedName = expectedParserName(message);
+        var expectedName = expectedParserName(message);
         assertThat(lines.toString()).contains(
                 expectedName + ".prototype.constructor = " + expectedName + ';'
         );
     }
 
     private static void assertParseMethod(CodeWriter lines, Descriptor message) {
-        String expected = new Parser(message).fromObjectMethod()
-                                             .toString();
+        var expected = new Parser(message).fromObjectMethod()
+                                          .toString();
         assertThat(lines.toString()).contains(expected);
     }
 

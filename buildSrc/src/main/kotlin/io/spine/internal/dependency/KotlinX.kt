@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * This script defines the common configuration for license report scripts.
- */
+package io.spine.internal.dependency
 
-println("`license-report-common.gradle` script is deprecated. " +
-        "Please use the `LicenseReporter` utility instead.")
+@Suppress("unused", "ConstPropertyName")
+object KotlinX {
 
-apply plugin: 'base'
+    const val group = "org.jetbrains.kotlinx"
 
-ext.licenseReportConfig = [
-        // The output filename
-        outputFilename  : "license-report.md",
+    object Coroutines {
 
-        // The path to a directory, to which a per-project report is generated.
-        relativePath    : "/reports/dependency-license/dependency"
-]
+        // https://github.com/Kotlin/kotlinx.coroutines
+        const val version = "1.7.3"
+        const val core = "$group:kotlinx-coroutines-core:$version"
+        const val jdk8 = "$group:kotlinx-coroutines-jdk8:$version"
+    }
+}

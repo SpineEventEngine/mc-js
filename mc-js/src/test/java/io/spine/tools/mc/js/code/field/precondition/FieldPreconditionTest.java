@@ -55,27 +55,27 @@ class FieldPreconditionTest {
     @Test
     @DisplayName("generate code to enter non-null check for primitive")
     void enterPrimitiveCheck() {
-        FieldPrecondition precondition = preconditionFor(primitiveField(), jsOutput);
+        var precondition = preconditionFor(primitiveField(), jsOutput);
         precondition.performNullCheck(FIELD_VALUE, SETTER_FORMAT);
-        String check = "if (" + FIELD_VALUE + " !== null)";
+        var check = "if (" + FIELD_VALUE + " !== null)";
         assertContains(jsOutput, check);
     }
 
     @Test
     @DisplayName("generate code to enter null check for message")
     void enterMessageCheck() {
-        FieldPrecondition precondition = preconditionFor(messageField(), jsOutput);
+        var precondition = preconditionFor(messageField(), jsOutput);
         precondition.performNullCheck(FIELD_VALUE, SETTER_FORMAT);
-        String check = "if (" + FIELD_VALUE + " === null)";
+        var check = "if (" + FIELD_VALUE + " === null)";
         assertContains(jsOutput, check);
     }
 
     @Test
     @DisplayName("set field value to null in case of message")
     void setMessageToNull() {
-        FieldPrecondition precondition = preconditionFor(messageField(), jsOutput);
+        var precondition = preconditionFor(messageField(), jsOutput);
         precondition.performNullCheck(FIELD_VALUE, SETTER_FORMAT);
-        String setNull = format(SETTER_FORMAT, "null");
+        var setNull = format(SETTER_FORMAT, "null");
         assertContains(jsOutput, setNull);
     }
 }

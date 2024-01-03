@@ -70,8 +70,8 @@ public class Given {
     }
 
     private static FieldDescriptor field(FieldContainerEntry entry) {
-        String fieldName = entry.protoName();
-        FieldDescriptor field = io.spine.tools.mc.js.code.given.Given.message().findFieldByName(fieldName);
+        var fieldName = entry.protoName();
+        var field = io.spine.tools.mc.js.code.given.Given.message().findFieldByName(fieldName);
         return field;
     }
 }

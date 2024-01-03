@@ -39,7 +39,7 @@ final class SingularFieldGenerator extends FieldGenerator {
 
     @Override
     public void generate() {
-        String fieldValue = acquireFieldValue();
+        var fieldValue = acquireFieldValue();
         checkNotUndefined(fieldValue);
         mergeFieldValue(fieldValue);
         exitUndefinedCheck();
@@ -53,9 +53,9 @@ final class SingularFieldGenerator extends FieldGenerator {
      */
     @Override
     String mergeFormat() {
-        FieldName fieldName = FieldName.from(field());
-        String setterName = "set" + fieldName;
-        String setFieldFormat = targetVariable() + '.' + setterName + "(%s);";
+        var fieldName = FieldName.from(field());
+        var setterName = "set" + fieldName;
+        var setFieldFormat = targetVariable() + '.' + setterName + "(%s);";
         return setFieldFormat;
     }
 

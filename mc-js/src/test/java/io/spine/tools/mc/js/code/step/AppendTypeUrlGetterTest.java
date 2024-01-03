@@ -74,7 +74,7 @@ class AppendTypeUrlGetterTest {
         }
 
         private void assertTypeUrl(Descriptor message) {
-            TypeUrl typeUrl = TypeUrl.from(message);
+            var typeUrl = TypeUrl.from(message);
             assertHasTypeUrl(typeUrl);
         }
     }
@@ -96,7 +96,7 @@ class AppendTypeUrlGetterTest {
         }
 
         private void assertOutHasTypeUrl(EnumDescriptor enumDescriptor) {
-            TypeUrl typeUrl = TypeUrl.from(enumDescriptor);
+            var typeUrl = TypeUrl.from(enumDescriptor);
             assertHasTypeUrl(typeUrl);
         }
     }

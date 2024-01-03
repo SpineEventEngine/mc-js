@@ -85,7 +85,7 @@ final class GenerateJsonParsers implements Action<Task> {
         var files = ProtoFiles.collect(project, ssn);
         var steps = createSteps(ssn);
         var suppliedFiles = files.get();
-        for (CodeGenStep step : steps) {
+        for (var step : steps) {
             step.performFor(suppliedFiles);
         }
     }

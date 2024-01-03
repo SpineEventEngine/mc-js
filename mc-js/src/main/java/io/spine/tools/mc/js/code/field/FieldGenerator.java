@@ -116,8 +116,8 @@ public abstract class FieldGenerator extends JsCodeGenerator {
      * @see #mergeFormat()
      */
     private void merge(String value) {
-        String mergeFormat = mergeFormat();
-        String setValue = format(mergeFormat, value);
+        var mergeFormat = mergeFormat();
+        var setValue = format(mergeFormat, value);
         writer().append(setValue);
     }
 

@@ -54,7 +54,7 @@ public class Method implements Snippet {
 
     @Override
     public CodeWriter writer() {
-        CodeWriter lines = new CodeWriter();
+        var lines = new CodeWriter();
         lines.append(declaration());
         lines.increaseDepth();
         try {
@@ -72,7 +72,7 @@ public class Method implements Snippet {
      * Declares JS method and enters its body.
      */
     private String declaration() {
-        String argString = join(", ", parameters);
+        var argString = join(", ", parameters);
         return reference + " = function(" + argString + ") {";
     }
 
@@ -128,7 +128,7 @@ public class Method implements Snippet {
         }
 
         /**
-         * Obtains the method composed from the builder.
+         * Obtains the method composed on top of the builder.
          */
         public Method build() {
             return new Method(this);

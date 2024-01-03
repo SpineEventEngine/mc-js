@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,20 +24,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * This script configures Gradle Checkstyle plugin.
+package io.spine.internal.dependency
+
+/**
+ * Dependencies on Spine Validation SDK.
+ *
+ * See [`SpineEventEngine/validation`](https://github.com/SpineEventEngine/validation/).
  */
-
-import io.spine.internal.dependency.CheckStyle
-
-println("`checkstyle.gradle` script is deprecated. Please use the `CheckStyleConfig` utility instead.")
-
-apply plugin: 'checkstyle'
-
-checkstyle {
-    toolVersion = "${CheckStyle.version}"
-    configFile = file("$rootDir/config/quality/checkstyle.xml")
-
-    // Disable checking the test sources.
-    checkstyleTest.enabled = false
+@Suppress("unused", "ConstPropertyName")
+object Validation {
+    const val version = "2.0.0-SNAPSHOT.110"
+    const val group = "io.spine.validation"
+    const val runtime = "$group:spine-validation-java-runtime:$version"
+    const val java = "$group:spine-validation-java:$version"
+    const val javaBundle = "$group:spine-validation-java-bundle:$version"
+    const val model = "$group:spine-validation-model:$version"
+    const val config = "$group:spine-validation-configuration:$version"
 }

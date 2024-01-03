@@ -28,7 +28,7 @@ package io.spine.tools.mc.js.fs;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.Immutable;
-import io.spine.logging.Logging;
+import io.spine.logging.WithLogging;
 import io.spine.tools.code.Element;
 import io.spine.tools.fs.ExternalModule;
 import io.spine.tools.fs.ExternalModules;
@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -47,7 +48,7 @@ import static java.util.Objects.requireNonNull;
  * {@linkplain #resolve(Path, ExternalModules) resolved}.
  */
 @Immutable
-final class ImportStatement implements Element, Logging {
+final class ImportStatement implements Element, WithLogging {
 
     private static final String GOOGLE_PROTOBUF_MODULE = "google-protobuf";
     private static final Pattern GOOGLE_PROTOBUF_MODULE_PATTERN =
@@ -57,7 +58,7 @@ final class ImportStatement implements Element, Logging {
     private static final String IMPORT_END = "')";
 
     /**
-     * The relative path from the test sources directory to the main sources directory.
+     * The relative path from the test sources directory to the {@code main} sources directory.
      *
      * <p>Depends on the structure of Spine Web project.
      */
@@ -112,7 +113,7 @@ final class ImportStatement implements Element, Logging {
      * the {@linkplain ExternalModule#spineWeb() Spine Web}.
      */
     ImportStatement resolve(Path generatedRoot, ExternalModules modules) {
-        ImportStatement resolved = this;
+        var resolved = this;
         if (containsGoogleProtobufType()) {
             resolved = relativizeStandardProtoImport(generatedRoot);
         }
@@ -127,15 +128,16 @@ final class ImportStatement implements Element, Logging {
      * ({@code google-protobuf/google/protobuf/..}).
      */
     private boolean containsGoogleProtobufType() {
-        return importRef.value().startsWith(GOOGLE_PROTOBUF_MODULE + "/google/protobuf/");
+        return importRef.value()
+                        .startsWith(GOOGLE_PROTOBUF_MODULE + "/google/protobuf/");
     }
 
     /**
      * Tells if this statement refers to a file which cannot be found on the file system.
      */
     private boolean isUnresolvedRelativeImport() {
-        boolean isRelative = importRef.isRelative();
-        boolean fileDoesNotExist = !importedFileExists();
+        var isRelative = importRef.isRelative();
+        var fileDoesNotExist = !importedFileExists();
         return isRelative && fileDoesNotExist;
     }
 
@@ -143,13 +145,13 @@ final class ImportStatement implements Element, Logging {
      * Attempts to resolve a relative import.
      */
     private ImportStatement resolveRelativeTo(ExternalModules modules) {
-        Optional<ImportStatement> mainSourceImport = resolveInMainSources();
+        var mainSourceImport = resolveInMainSources();
         if (mainSourceImport.isPresent()) {
             return mainSourceImport.get();
         }
-        for (ExternalModule module : modules.asList()) {
+        for (var module : modules.asList()) {
             if (module.provides(importRef)) {
-                FileReference fileInModule = module.fileInModule(importRef);
+                var fileInModule = module.fileInModule(importRef);
                 return replaceRef(fileInModule.value());
             }
         }
@@ -160,26 +162,27 @@ final class ImportStatement implements Element, Logging {
      * Attempts to resolve a relative import among main sources.
      */
     private Optional<ImportStatement> resolveInMainSources() {
-        String fileReference = importRef.value();
-        String delimiter = FileReference.currentDirectory();
-        int insertionIndex = fileReference.lastIndexOf(delimiter) + delimiter.length();
-        String updatedReference = fileReference.substring(0, insertionIndex)
+        var fileReference = importRef.value();
+        var delimiter = FileReference.currentDirectory();
+        var insertionIndex = fileReference.lastIndexOf(delimiter) + delimiter.length();
+        var updatedReference = fileReference.substring(0, insertionIndex)
                 + TEST_PROTO_RELATIVE_TO_MAIN
                 + fileReference.substring(insertionIndex);
-        ImportStatement updatedImport = replaceRef(updatedReference);
+        var updatedImport = replaceRef(updatedReference);
         return updatedImport.importedFileExists()
                ? Optional.of(updatedImport)
                : Optional.empty();
     }
 
     private ImportStatement relativizeStandardProtoImport(Path generatedRoot) {
-        String fileReference = importRef.value();
-        String relativePathToRoot = sourceDirectory.relativize(generatedRoot).toString();
-        String replacement =
+        var fileReference = importRef.value();
+        var relativePathToRoot = sourceDirectory.relativize(generatedRoot)
+                                                .toString();
+        var replacement =
                 relativePathToRoot.isEmpty()
                 ? FileReference.currentDirectory()
                 : relativePathToRoot.replace('\\', '/') + FileReference.separator();
-        String relativeReference =
+        var relativeReference =
                 GOOGLE_PROTOBUF_MODULE_PATTERN.matcher(fileReference)
                                               .replaceFirst(replacement);
         return replaceRef(relativeReference);
@@ -194,9 +197,9 @@ final class ImportStatement implements Element, Logging {
     }
 
     private static FileReference fileRefValue(String text) {
-        int beginIndex = text.indexOf(IMPORT_START) + IMPORT_START.length();
-        int endIndex = text.indexOf(IMPORT_END, beginIndex);
-        String importPath = text.substring(beginIndex, endIndex);
+        var beginIndex = text.indexOf(IMPORT_START) + IMPORT_START.length();
+        var endIndex = text.indexOf(IMPORT_END, beginIndex);
+        var importPath = text.substring(beginIndex, endIndex);
         return FileReference.of(importPath);
     }
 
@@ -204,7 +207,7 @@ final class ImportStatement implements Element, Logging {
      * Obtains a new instance with the updated path in the import statement.
      */
     public ImportStatement replaceRef(CharSequence newFileRef) {
-        String updatedText = text.replace(importRef.value(), newFileRef);
+        var updatedText = text.replace(importRef.value(), newFileRef);
         return new ImportStatement(sourceDirectory, updatedText);
     }
 
@@ -225,10 +228,12 @@ final class ImportStatement implements Element, Logging {
      * Tells whether the imported file is present on a file system.
      */
     private boolean importedFileExists() {
-        Path filePath = importedFilePath();
-        boolean exists = filePath.toFile()
-                                 .exists();
-        _debug().log("Checking if the imported file `%s` exists, result: %b.", filePath, exists);
+        var filePath = importedFilePath();
+        var exists = filePath.toFile()
+                             .exists();
+        logger().atDebug()
+                .log(() -> format("Checking if the imported file `%s` exists, result: %b.",
+                                  filePath, exists));
         return exists;
     }
 
@@ -236,7 +241,7 @@ final class ImportStatement implements Element, Logging {
      * Obtains the absolute path to the imported file.
      */
     Path importedFilePath() {
-        Path filePath = sourceDirectory.resolve(importRef.value());
+        var filePath = sourceDirectory.resolve(importRef.value());
         return filePath.normalize();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022, TeamDev. All rights reserved.
+ * Copyright 2023, TeamDev. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,28 +24,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package io.spine.internal.gradle.publish
+package io.spine.internal.dependency
 
 /**
- * A DSL element of [SpinePublishing] extension which allows disabling publishing
- * of [protoJar] artifact.
+ * The dependency on the `java-diff-utils` library, which is transitive for us at the time
+ * of writing.
  *
- * This artifact contains all the `.proto` definitions from `sourceSets.main.proto`. By default,
- * it is published.
- *
- * Take a look on [SpinePublishing.protoJar] for a usage example.
- *
- * @see [registerArtifacts]
+ * It might become our dependency as a part of
+ * the [Spine Text](https://github.com/SpineEventEngine/text) library.
  */
-class ProtoJar {
+@Suppress("unused", "ConstPropertyName")
+object JavaDiffUtils {
 
-    /**
-     * Set of modules, for which a proto JAR will not be published.
-     */
-    var exclusions: Set<String> = emptySet()
-
-    /**
-     * Disables proto JAR publishing for all published modules.
-     */
-    var disabled = false
+    // https://github.com/java-diff-utils/java-diff-utils/releases
+    private const val version = "4.12"
+    const val lib = "io.github.java-diff-utils:java-diff-utils:${version}"
 }
