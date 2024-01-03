@@ -120,6 +120,7 @@ subprojects {
                 force(
                     JUnit.runner,
                     Spine.base,
+                    Spine.reflect,
                     Spine.testlib,
                     Spine.toolBase,
                     Spine.pluginBase,
