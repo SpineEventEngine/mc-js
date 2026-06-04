@@ -26,8 +26,8 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.SourceFile;
+import io.spine.tools.fs.SourceCodeDirectory;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.js.fs.JsFiles;
 

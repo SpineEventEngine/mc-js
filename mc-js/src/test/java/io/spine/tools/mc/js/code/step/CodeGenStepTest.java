@@ -27,9 +27,9 @@
 package io.spine.tools.mc.js.code.step;
 
 import com.google.common.collect.ImmutableSet;
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileDescriptors;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.fs.SourceCodeDirectory;
 import io.spine.tools.js.fs.DefaultJsPaths;
 import io.spine.tools.mc.js.code.given.GivenProject;
 import io.spine.tools.mc.js.code.given.TestCodeGenStep;

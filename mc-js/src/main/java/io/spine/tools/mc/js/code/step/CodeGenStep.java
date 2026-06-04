@@ -26,8 +26,8 @@
 
 package io.spine.tools.mc.js.code.step;
 
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.fs.SourceCodeDirectory;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

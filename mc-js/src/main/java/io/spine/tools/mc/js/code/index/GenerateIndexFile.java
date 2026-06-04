@@ -27,9 +27,9 @@
 package io.spine.tools.mc.js.code.index;
 
 import com.google.common.annotations.VisibleForTesting;
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
+import io.spine.tools.fs.SourceCodeDirectory;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.mc.js.code.CodeWriter;
 import io.spine.tools.mc.js.code.step.CodeGenStep;

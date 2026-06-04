@@ -27,8 +27,8 @@
 package io.spine.tools.mc.js.code.index;
 
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.fs.SourceCodeDirectory;
 import io.spine.tools.js.fs.FileName;
 import io.spine.tools.js.fs.JsFiles;
 import io.spine.tools.mc.js.code.CodeWriter;

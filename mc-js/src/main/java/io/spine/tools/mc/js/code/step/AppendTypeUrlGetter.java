@@ -28,10 +28,10 @@ package io.spine.tools.mc.js.code.step;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.Descriptors.FileDescriptor;
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
 import io.spine.code.proto.TypeSet;
 import io.spine.tools.code.Line;
+import io.spine.tools.fs.SourceCodeDirectory;
 import io.spine.tools.js.code.MethodReference;
 import io.spine.tools.js.code.TypeName;
 import io.spine.tools.mc.js.code.CodeWriter;

@@ -26,8 +26,8 @@
 
 package io.spine.tools.mc.js.code.given;
 
-import io.spine.code.fs.SourceCodeDirectory;
 import io.spine.code.proto.FileSet;
+import io.spine.tools.fs.SourceCodeDirectory;
 import io.spine.tools.mc.js.code.step.CodeGenStep;
 
 import javax.annotation.Nullable;
